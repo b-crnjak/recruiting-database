@@ -4,6 +4,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 import pandas as pd
 import ast
+from streamlit_app import sheet
 
 st.header("UNC MBB Prospect Database")
 
