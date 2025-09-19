@@ -1,5 +1,5 @@
 import streamlit as st
-from Prospect_Database import sheet
+from pages.Prospect_Database import sheet
 
 st.markdown(
     """
