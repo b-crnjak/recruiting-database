@@ -1,9 +1,7 @@
-import json
 import streamlit as st
 import gspread
 from google.oauth2.service_account import Credentials
 import pandas as pd
-import ast
 
 st.switch_page("pages/1_Prospect_Database.py")
 
