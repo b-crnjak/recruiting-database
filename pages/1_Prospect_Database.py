@@ -4,7 +4,34 @@ import gspread
 from google.oauth2.service_account import Credentials
 import pandas as pd
 import ast
-from streamlit_app import sheet
+import streamlit as st
+import streamlit_authenticator as stauth
+
+users = {
+    "usernames": {
+        "bcrnjak": {"name": "John Doe", "password": "frontoffice23"},
+        "jtanner": {"name": "Jane Smith", "password": "frontoffice23"},
+        "tbeisner": {"name": "Tom Beisner", "password": "frontoffice23"}
+    }
+}
+
+authenticator = stauth.Authenticate(
+    users,
+    "my_cookie_name",
+    "my_signature_key",
+    cookie_expiry_days=1
+)
+
+name, authentication_status, username = authenticator.login(location='main')
+
+if authentication_status:
+    # Place all your app logic here
+    st.header("UNC MBB Prospect Database")
+    # ...rest of your app...
+elif authentication_status == False:
+    st.error("Username/password is incorrect")
+elif authentication_status == None:
+    st.warning("Please enter your username and password")
 
 st.header("UNC MBB Prospect Database")
 

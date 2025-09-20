@@ -5,6 +5,8 @@ from google.oauth2.service_account import Credentials
 import pandas as pd
 import ast
 
+st.switch_page("pages/1_Prospect_Database.py")
+
 scope = ["https://spreadsheets.google.com/feeds",
          "https://www.googleapis.com/auth/drive"]
 
@@ -17,3 +19,4 @@ client = gspread.authorize(creds)
 sheet = client.open("rec_database").worksheet("players")
 data = sheet.get_all_records()
 df = pd.DataFrame(data)
+
