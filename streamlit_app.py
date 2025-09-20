@@ -29,7 +29,7 @@ def check_password():
     st.markdown('<div class="password-desc">Access to this app is restricted. Please enter the database password below.</div>', unsafe_allow_html=True)
 
     def password_entered():
-        if st.session_state["password"] == "yourpassword":
+        if st.session_state["password"] == "frontoffice23":
             st.session_state["password_correct"] = True
         else:
             st.session_state["password_correct"] = False
