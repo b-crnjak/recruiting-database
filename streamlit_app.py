@@ -15,18 +15,3 @@ client = gspread.authorize(creds)
 sheet = client.open("rec_database").worksheet("players")
 data = sheet.get_all_records()
 df = pd.DataFrame(data)
-
-def initialize_player_notes_column(sheet, notes_col=21):
-    """
-    Set Player Notes column to [] for all players if blank or not a valid list.
-    Assumes first row is header.
-    """
-    num_rows = sheet.row_count
-    for row in range(2, num_rows + 1):
-        cell_value = sheet.cell(row, notes_col).value
-        try:
-            val = ast.literal_eval(cell_value) if cell_value else []
-            if not isinstance(val, list):
-                raise ValueError
-        except Exception:
-            sheet.update_cell(row, notes_col, str([]))
