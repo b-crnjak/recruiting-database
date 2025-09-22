@@ -70,6 +70,11 @@ with st.form("add_player_form"):
     front_office_notes_text = notes_cols[0].text_area("Front Office Notes")
     scouting_notes_text = notes_cols[1].text_area("Scouting Notes")
 
+    notes_cols2 = st.columns([1,1,2])
+    tag = notes_cols2[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Evaluated"])
+    connection_name = notes_cols2[1].selectbox("Connection", ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"])
+    connection_details = notes_cols2[2].text_area("Connection Details")
+
     submit = st.form_submit_button("Add Player")
 
 if submit:
@@ -109,7 +114,10 @@ if submit:
             agent,
             eligibility_years,
             str(front_office_notes),
-            str(scouting_notes)
+            str(scouting_notes),
+            tag,
+            connection_name,
+            connection_details
         ]
         try:
             sheet.append_row(row)

@@ -62,6 +62,10 @@ with st.form("filter_form"):
     filter_current_school = cols2[2].text_input("Current School/Team")
     filter_position = cols2[3].selectbox("Position", ["", "Point Guard", "Shooting Guard", "Wing", "Post"])
 
+    cols3 = st.columns(4)
+    filter_tag = cols3[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Evaluated"])
+    filter_connection = cols3[1].selectbox("Connection", ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"])
+
     filter_submit = st.form_submit_button("Apply Filters")
 
 filtered_df = df.copy()
@@ -81,6 +85,10 @@ if filter_state:
     filtered_df = filtered_df[filtered_df["State or Country"].str.contains(filter_state, case=False, na=False)]
 if filter_current_school:
     filtered_df = filtered_df[filtered_df["Current School/Team"].str.contains(filter_current_school, case=False, na=False)]
+if filter_tag:
+    filtered_df = filtered_df[filtered_df["Evaluation Tag"] == filter_tag]
+if filter_connection:
+    filtered_df = filtered_df[filtered_df["Connection"] == filter_connection]
 
 if filtered_df.empty:
     st.info("No players match the filter criteria.")
@@ -140,10 +148,22 @@ else:
             stat_cols2[1].markdown(f"**PPP:** {row.get('Points Per Possession','')}")
 
             import ast
+
             st.markdown('<div class="carolina-subheader">Player Notes</div>', unsafe_allow_html=True)
+
             notes_cols = st.columns(2)
             fon_raw = row.get('Front Office Notes','')
             sn_raw = row.get('Scouting Notes','')
+
+            notes_cols2 = st.columns(2)
+            notes_cols2[0].markdown(f"**Evaluation Tag:** {row.get('Evaluation Tag','')}")
+            connection = row.get('Connection','')
+            connection_details = row.get('Connection Details','')
+            if connection:
+                notes_cols2[1].markdown(f"**Connection Details:** {connection}: {connection_details}")
+            else:
+                notes_cols2[1].markdown(f"**Connection Details:** {connection_details}")
+
             fon_list = []
             sn_list = []
             try:
@@ -195,27 +215,47 @@ else:
                     first_name = gen_cols[0].text_input("First Name", value=row.get('First Name',''))
                     last_name = gen_cols[1].text_input("Last Name", value=row.get('Last Name',''))
                     grad_year = gen_cols[2].number_input("Graduation Year", min_value=1900, max_value=2100, step=1, value=safe_int(row.get('Graduation Year',1900)))
-                    position = gen_cols[3].text_input("Position", value=row.get('Position',''))
+                    position_options = ["Point Guard", "Shooting Guard", "Wing", "Post"]
+                    position_value = row.get('Position', '')
+                    if position_value in position_options:
+                        position_index = position_options.index(position_value)
+                    else:
+                        position_index = 0
+                    position = gen_cols[3].selectbox("Position", options=position_options, index=position_index)
+
                     pos_cols = st.columns(4)
                     classification = pos_cols[0].text_input("Classification", value=row.get('Classification',''))
                     city = pos_cols[1].text_input("City", value=row.get('City',''))
                     state = pos_cols[2].text_input("State or Country", value=row.get('State or Country',''))
                     current_school = pos_cols[3].text_input("Current School/Team", value=row.get('Current School/Team',''))
+
                     meas_cols = st.columns(4)
                     height = meas_cols[0].text_input("Height", value=row.get('Height',''))
                     weight = meas_cols[1].number_input("Weight", min_value=0.0, step=0.1, value=safe_float(row.get('Weight',0)))
                     points = meas_cols[2].number_input("Points", min_value=0.0, step=0.1, value=safe_float(row.get('Points',0)))
                     rebounds = meas_cols[3].number_input("Rebounds", min_value=0.0, step=0.1, value=safe_float(row.get('Rebounds',0)))
+
                     stat_cols = st.columns(4)
                     assists = stat_cols[0].number_input("Assists", min_value=0.0, step=0.1, value=safe_float(row.get('Assists',0)))
                     ast_to_to = stat_cols[1].number_input("Ast/TO Ratio", min_value=0.0, step=0.1, value=safe_float(row.get('Assist to Turnover Ratio',0)))
                     three_pt_pct = stat_cols[2].number_input("3PT%", min_value=0.0, step=0.1, value=safe_float(row.get('3PT%',0)))
                     three_pt_rate = stat_cols[3].number_input("3PT Rate", min_value=0.0, step=0.1, value=safe_float(row.get('3PT Rate',0)))
+
                     stat_cols2 = st.columns(4)
                     efg_pct = stat_cols2[0].number_input("EFG%", min_value=0.0, step=0.1, value=safe_float(row.get('EFG%',0)))
                     ppp = stat_cols2[1].number_input("PPP", min_value=0.0, step=0.1, value=safe_float(row.get('Points Per Possession',0)))
                     agent = stat_cols2[2].text_input("Agent", value=row.get('Agent',''))
                     years_elig = stat_cols2[3].number_input("Years of Eligibility", min_value=0, step=1, value=safe_int(row.get('Years of Eligibility',0)))
+
+                    notes_cols = st.columns(2)
+                    front_office_notes = notes_cols[0].text_area("Front Office Notes", value=row.get('Front Office Notes',''))
+                    scouting_notes = notes_cols[1].text_area("Scouting Notes", value=row.get('Scouting Notes',''))
+
+                    notes_cols2 = st.columns([2,1,1])
+                    connection_details = notes_cols2[0].text_area("Connection Details", value=row.get('Connection Details',''))
+                    connection_name = notes_cols2[1].selectbox("Connection", options=["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"], index=["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"].index(row.get('Connection','')) if row.get('Connection','') in ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"] else 0)
+                    tag = notes_cols2[2].selectbox("Evaluation Tag", options=["", "Need to Evaluate", "Evaluated"], index=["", "Need to Evaluate", "Evaluated"].index(row.get('Evaluation Tag','')) if row.get('Evaluation Tag','') in ["", "Need to Evaluate", "Evaluated"] else 0)
+
                     save_btn = st.form_submit_button("Save Changes")
                     cancel_btn = st.form_submit_button("Cancel")
                 if save_btn:
