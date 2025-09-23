@@ -60,10 +60,10 @@ with st.form("filter_form"):
     filter_city = cols2[0].text_input("City")
     filter_state = cols2[1].text_input("State")
     filter_current_school = cols2[2].text_input("Current School/Team")
-    filter_position = cols2[3].selectbox("Position", ["", "Point Guard", "Shooting Guard", "Wing", "Post"])
+    filter_position = cols2[3].selectbox("Position", ["", "Pure Point", "Wing", "Stretch Big", "Rim Runner"])
 
     cols3 = st.columns(4)
-    filter_tag = cols3[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Evaluated"])
+    filter_tag = cols3[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Bench", "Starter", "All-Conference"])
     filter_connection = cols3[1].selectbox("Connection", ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"])
 
     filter_submit = st.form_submit_button("Apply Filters")
@@ -104,87 +104,123 @@ else:
         except (ValueError, TypeError):
             return default
     for i, row in filtered_df.iterrows():
-        grad_year = row.get('Graduation Year','')
+        firstname = row.get('First Name','')
+        lastname = row.get('Last Name','')
         position = row.get('Position','')
-        expander_label = f"**{row.get('First Name','')} {row.get('Last Name','')}** · {grad_year} {position}"
+        classification = row.get('Classification','')
+        grad_year = row.get('Graduation Year','')
+        player_city = row.get('City','')
+        player_state = row.get('State or Country','')
+        current_school = row.get('Current School/Team','')
+        school_city = row.get('School City','') if 'School City' in row else ''
+        school_state = row.get('School State','') if 'School State' in row else ''
+        past_schools = row.get('Past School(s)/Team(s)','')
+        height = row.get('Height','')
+        weight = row.get('Weight','')
+        points = row.get('Points','')
+        rebounds = row.get('Rebounds','')
+        assists = row.get('Assists','')
+        ast_to_to = row.get('Assist to Turnover Ratio','')
+        three_pt_pct = row.get('3PT%','')
+        three_pt_rate = row.get('3PT Rate','')
+        efg_pct = row.get('EFG%','')
+        ppp = row.get('Points Per Possession','')
+        agency = row.get('Agency','') if 'Agency' in row else ''
+        agent = row.get('Agent','')
+        agent_num = row.get('Agent Phone Number','') if 'Agent Phone Number' in row else ''
+        eligibility_years = row.get('Years of Eligibility','')
+        nil_min = row.get('NIL Min','') if 'NIL Min' in row else ''
+        nil_max = row.get('NIL Max','') if 'NIL Max' in row else ''
+        teams_interest = row.get('Teams Interested','') if 'Teams Interested' in row else ''
+        connection_name = row.get('Connection','')
+        connection_details = row.get('Connection Details','')
+        tag = row.get('Evaluation Tag','')
+        expander_label = f"**{firstname} {lastname}** · {position}"
         with st.expander(expander_label):
 
             st.markdown("<hr>", unsafe_allow_html=True)
 
-            st.markdown('<div class="carolina-subheader">General Information</div>', unsafe_allow_html=True)
-
+            st.markdown('<div class="carolina-subheader">Player Information</div>', unsafe_allow_html=True)
             gen_cols = st.columns(4)
-            gen_cols[0].markdown(f"**Name:** {row.get('First Name','')} {row.get('Last Name','')}")
-            gen_cols[1].markdown(f"**Graduation Year:** {row.get('Graduation Year','')}")
-            gen_cols[2].markdown(f"**Position:** {row.get('Position','')}")
-            gen_cols[3].markdown(f"**Classification:** {row.get('Classification','')}")
+            gen_cols[0].markdown(f"**First Name:** {firstname}")
+            gen_cols[1].markdown(f"**Last Name:** {lastname}")
+            gen_cols[2].markdown(f"**Position:** {position}")
+            gen_cols[3].markdown(f"**Classification:** {classification}")
 
-            pos_cols = st.columns(4)
-            pos_cols[0].markdown(f"**City:** {row.get('City','')}")
-            pos_cols[1].markdown(f"**State or Country:** {row.get('State or Country','')}")
-            pos_cols[2].markdown(f"**Agent:** {row.get('Agent','')}")
-            pos_cols[3].markdown(f"**Years of Eligibility:** {row.get('Years of Eligibility','')}")
+            gen_cols2 = st.columns([1,1,2])
+            gen_cols2[0].markdown(f"**Graduation Year:** {grad_year}")
+            gen_cols2[1].markdown(f"**City:** {player_city}")
+            gen_cols2[2].markdown(f"**State or Country:** {player_state}")
 
-            pos_cols2 = st.columns(2)
-            pos_cols2[0].markdown(f"**Current School/Team:** {row.get('Current School/Team','')}")
-            pos_cols2[1].markdown(f"**Past School(s)/Team(s):** {row.get('Past School(s)/Team(s)','')}")
+            st.markdown('<div class="carolina-subheader">School/Team Information</div>', unsafe_allow_html=True)
+            team_cols = st.columns([2,1,2])
+            team_cols[0].markdown(f"**Team Name:** {current_school}")
+            team_cols[1].markdown(f"**City:** {school_city}")
+            team_cols[2].markdown(f"**State or Country:** {school_state}")
+            team_cols2 = st.columns(1)
+            team_cols2[0].markdown(f"**Past School(s)/Team(s):** {past_schools}")
 
+            # Measurables and Statistics
             st.markdown('<div class="carolina-subheader">Measurables and Statistics</div>', unsafe_allow_html=True)
+            meas_cols = st.columns([1,1,2])
+            meas_cols[0].markdown(f"**Height:** {height}")
+            meas_cols[1].markdown(f"**Weight:** {weight}")
 
-            meas_cols = st.columns(4)
-            meas_cols[0].markdown(f"**Height:** {row.get('Height','')}")
-            meas_cols[1].markdown(f"**Weight:** {row.get('Weight','')}")
-            meas_cols[2].markdown(f"**Points:** {row.get('Points','')}")
-            meas_cols[3].markdown(f"**Rebounds:** {row.get('Rebounds','')}")
+            meas_cols2 = st.columns(4)
+            meas_cols2[0].markdown(f"**Points:** {points}")
+            meas_cols2[1].markdown(f"**Rebounds:** {rebounds}")
+            meas_cols2[2].markdown(f"**Assists:** {assists}")
+            meas_cols2[3].markdown(f"**Assist to Turnover Ratio:** {ast_to_to}")
 
-            stat_cols = st.columns(4)
-            stat_cols[0].markdown(f"**Assists:** {row.get('Assists','')}")
-            stat_cols[1].markdown(f"**Ast/TO Ratio:** {row.get('Assist to Turnover Ratio','')}")
-            stat_cols[2].markdown(f"**3PT%:** {row.get('3PT%','')}")
-            stat_cols[3].markdown(f"**3PT Rate:** {row.get('3PT Rate','')}")
+            meas_cols3 = st.columns(4)
+            meas_cols3[0].markdown(f"**3PT%:** {three_pt_pct}")
+            meas_cols3[1].markdown(f"**3PT Rate:** {three_pt_rate}")
+            meas_cols3[2].markdown(f"**EFG%:** {efg_pct}")
+            meas_cols3[3].markdown(f"**Points Per Possession:** {ppp}")
 
-            stat_cols2 = st.columns(4)
-            stat_cols2[0].markdown(f"**EFG%:** {row.get('EFG%','')}")
-            stat_cols2[1].markdown(f"**PPP:** {row.get('Points Per Possession','')}")
+            st.markdown('<div class="carolina-subheader">Front Office Information</div>', unsafe_allow_html=True)
+            fo_cols = st.columns(4)
+            fo_cols[0].markdown(f"**Agency:** {agency}")
+            fo_cols[1].markdown(f"**Agent:** {agent}")
+            fo_cols[2].markdown(f"**Agent Phone Number:** {agent_num}")
+            fo_cols[3].markdown(f"**Years of Eligibility:** {eligibility_years}")
 
-            import ast
+            fo_cols2 = st.columns(4)
+            fo_cols2[0].markdown(f"**NIL Min:** {nil_min}")
+            fo_cols2[1].markdown(f"**NIL Max:** {nil_max}")
+            fo_cols2[2].markdown(f"**Teams Interested:** {teams_interest}")
 
-            st.markdown('<div class="carolina-subheader">Player Notes</div>', unsafe_allow_html=True)
-
-            notes_cols = st.columns(2)
-            fon_raw = row.get('Front Office Notes','')
-            sn_raw = row.get('Scouting Notes','')
-
-            notes_cols2 = st.columns(2)
-            notes_cols2[0].markdown(f"**Evaluation Tag:** {row.get('Evaluation Tag','')}")
-            connection = row.get('Connection','')
-            connection_details = row.get('Connection Details','')
-            if connection:
-                notes_cols2[1].markdown(f"**Connection Details:** {connection}: {connection_details}")
-            else:
-                notes_cols2[1].markdown(f"**Connection Details:** {connection_details}")
-
+            # Front Office Notes as cards
             fon_list = []
-            sn_list = []
             try:
-                fon_list = ast.literal_eval(fon_raw) if fon_raw else []
+                fon_list = ast.literal_eval(row.get('Front Office Notes','')) if row.get('Front Office Notes','') else []
             except Exception:
                 fon_list = []
+            st.markdown("**Front Office Notes:**")
+            for note in sorted(fon_list, key=lambda x: x.get('timestamp',''), reverse=True):
+                date_str = note.get('timestamp','')[:10]
+                st.markdown(f"<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'><span style='float:right;'>{date_str}</span><br>{note.get('text','')}</div>", unsafe_allow_html=True)
+
+            st.markdown('<div class="carolina-subheader">Connection Details</div>', unsafe_allow_html=True)
+            con_cols = st.columns([1,3])
+            con_cols[0].markdown(f"**Connection:** {connection_name}")
+            con_cols[1].markdown(f"**Connection Details:** {connection_details}")
+
+            st.markdown('<div class="carolina-subheader">Scouting Notes</div>', unsafe_allow_html=True)
+            scout_cols = st.columns([1,3])
+            scout_cols[0].markdown(f"**Evaluation Tag:** {tag}")
+
+            # Front Office Notes as cards
+            sn_list = []
             try:
-                sn_list = ast.literal_eval(sn_raw) if sn_raw else []
+                sn_list = ast.literal_eval(row.get('Scouting Notes','')) if row.get('Scouting Notes','') else []
             except Exception:
                 sn_list = []
-            fon_list = sorted(fon_list, key=lambda x: x.get('timestamp',''), reverse=True)
-            sn_list = sorted(sn_list, key=lambda x: x.get('timestamp',''), reverse=True)
-            notes_cols[0].markdown("**Front Office Notes:**")
-            for note in fon_list:
+            st.markdown("**Scouting Notes:**")
+            for note in sorted(sn_list, key=lambda x: x.get('timestamp',''), reverse=True):
                 date_str = note.get('timestamp','')[:10]
-                notes_cols[0].markdown(f"<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'><b>{note.get('author','')}</b> <span style='float:right;'>{date_str}</span><br>{note.get('text','')}</div>", unsafe_allow_html=True)
-            notes_cols[1].markdown("**Scouting Notes:**")
-            for note in sn_list:
-                date_str = note.get('timestamp','')[:10]
-                notes_cols[1].markdown(f"<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'><b>{note.get('author','')}</b> <span style='float:right;'>{date_str}</span><br>{note.get('text','')}</div>", unsafe_allow_html=True)
-
+                st.markdown(f"<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'><span style='float:right;'>{date_str}</span><br>{note.get('text','')}</div>", unsafe_allow_html=True)
+            
             action_cols = st.columns([10, 1, 1])
             edit_key = f"edit_{i}"
             delete_key = f"delete_{i}"
@@ -215,7 +251,7 @@ else:
                     first_name = gen_cols[0].text_input("First Name", value=row.get('First Name',''))
                     last_name = gen_cols[1].text_input("Last Name", value=row.get('Last Name',''))
                     grad_year = gen_cols[2].number_input("Graduation Year", min_value=1900, max_value=2100, step=1, value=safe_int(row.get('Graduation Year',1900)))
-                    position_options = ["Point Guard", "Shooting Guard", "Wing", "Post"]
+                    position_options = ["Pure Point", "Wing", "Stretch Big", "Rim Runner"]
                     position_value = row.get('Position', '')
                     if position_value in position_options:
                         position_index = position_options.index(position_value)
@@ -247,36 +283,126 @@ else:
                     agent = stat_cols2[2].text_input("Agent", value=row.get('Agent',''))
                     years_elig = stat_cols2[3].number_input("Years of Eligibility", min_value=0, step=1, value=safe_int(row.get('Years of Eligibility',0)))
 
+                    # Display non-editable fields
+                    # Add all fields as editable widgets
+                    school_city = st.text_input("School City", value=row.get('School City',''))
+                    school_state = st.text_input("School State", value=row.get('School State',''))
+                    past_schools = st.text_area("Past School(s)/Team(s)", value=row.get('Past School(s)/Team(s)',''))
+                    agent_num = st.text_input("Agent Phone Number", value=row.get('Agent Phone Number',''))
+                    nil_min = st.number_input("NIL Min", min_value=0.0, step=100.0, value=float(row.get('NIL Min',0)) if row.get('NIL Min','') else 0.0, format="%.0f")
+                    nil_max = st.number_input("NIL Max", min_value=0.0, step=100.0, value=float(row.get('NIL Max',0)) if row.get('NIL Max','') else 0.0, format="%.0f")
+                    teams_interest = st.text_input("Teams Interested", value=row.get('Teams Interested',''))
+
+                    # Add note fields (append only)
                     notes_cols = st.columns(2)
-                    front_office_notes = notes_cols[0].text_area("Front Office Notes", value=row.get('Front Office Notes',''))
-                    scouting_notes = notes_cols[1].text_area("Scouting Notes", value=row.get('Scouting Notes',''))
+                    new_front_office_note = notes_cols[0].text_area("Add Front Office Note", value="")
+                    new_scouting_note = notes_cols[1].text_area("Add Scouting Note", value="")
+
+                    # Parse previous notes as lists
+                    import ast
+                    fon_raw = row.get('Front Office Notes','')
+                    sn_raw = row.get('Scouting Notes','')
+                    try:
+                        fon_list = ast.literal_eval(fon_raw) if fon_raw else []
+                        if not isinstance(fon_list, list): fon_list = []
+                    except Exception:
+                        fon_list = []
+                    try:
+                        sn_list = ast.literal_eval(sn_raw) if sn_raw else []
+                        if not isinstance(sn_list, list): sn_list = []
+                    except Exception:
+                        sn_list = []
+
+                    # Display all previous notes as cards
+                    notes_cols[0].markdown("**Previous Front Office Notes:**")
+                    for note in sorted(fon_list, key=lambda x: x.get('timestamp',''), reverse=True):
+                        date_str = note.get('timestamp','')[:10]
+                        notes_cols[0].markdown(f"<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'><span style='float:right;'>{date_str}</span><br>{note.get('text','')}</div>", unsafe_allow_html=True)
+                    notes_cols[1].markdown("**Previous Scouting Notes:**")
+                    for note in sorted(sn_list, key=lambda x: x.get('timestamp','') or '', reverse=True):
+                        date_str = note.get('timestamp','')[:10]
+                        notes_cols[1].markdown(f"<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'><span style='float:right;'>{date_str}</span><br>{note.get('text','')}</div>", unsafe_allow_html=True)
 
                     notes_cols2 = st.columns([2,1,1])
                     connection_details = notes_cols2[0].text_area("Connection Details", value=row.get('Connection Details',''))
                     connection_name = notes_cols2[1].selectbox("Connection", options=["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"], index=["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"].index(row.get('Connection','')) if row.get('Connection','') in ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"] else 0)
-                    tag = notes_cols2[2].selectbox("Evaluation Tag", options=["", "Need to Evaluate", "Evaluated"], index=["", "Need to Evaluate", "Evaluated"].index(row.get('Evaluation Tag','')) if row.get('Evaluation Tag','') in ["", "Need to Evaluate", "Evaluated"] else 0)
+                    tag = notes_cols2[2].selectbox("Evaluation Tag", options=["", "Need to Evaluate", "Bench", "Starter", "All-Conference"], index=["", "Need to Evaluate", "Bench", "Starter", "All-Conference"].index(row.get('Evaluation Tag','')) if row.get('Evaluation Tag','') in ["", "Need to Evaluate", "Bench", "Starter", "All-Conference"] else 0)
 
                     save_btn = st.form_submit_button("Save Changes")
                     cancel_btn = st.form_submit_button("Cancel")
                 if save_btn:
                     idx = df[(df['First Name'] == row['First Name']) & (df['Last Name'] == row['Last Name'])].index
                     if len(idx) > 0:
+                        import datetime
+                        now = datetime.datetime.now().isoformat()
+                        # Parse previous notes as lists (again, for safety)
+                        import ast
+                        try:
+                            fon_list = ast.literal_eval(fon_raw) if fon_raw else []
+                            if not isinstance(fon_list, list): fon_list = []
+                        except Exception:
+                            fon_list = []
+                        try:
+                            sn_list = ast.literal_eval(sn_raw) if sn_raw else []
+                            if not isinstance(sn_list, list): sn_list = []
+                        except Exception:
+                            sn_list = []
+                        # Append new notes if provided
+                        if new_front_office_note.strip():
+                            fon_list.append({"timestamp": now, "text": new_front_office_note.strip()})
+                        if new_scouting_note.strip():
+                            sn_list.append({"timestamp": now, "text": new_scouting_note.strip()})
                         update_row = [
-                            classification, grad_year, first_name, last_name, position, city, state, current_school,
-                            height, weight, points, rebounds, assists, ast_to_to, three_pt_pct, three_pt_rate,
-                            efg_pct, ppp, agent, years_elig
+                            first_name,                # First Name
+                            last_name,                 # Last Name
+                            position,                  # Position
+                            classification,            # Classification
+                            grad_year,                 # Graduation Year
+                            city,                      # City
+                            state,                     # State or Country
+                            current_school,            # Current School/Team
+                            school_city,               # School City
+                            school_state,              # School State
+                            past_schools,              # Past School(s)/Team(s)
+                            height,                    # Height
+                            weight,                    # Weight
+                            points,                    # Points
+                            rebounds,                  # Rebounds
+                            assists,                   # Assists
+                            ast_to_to,                 # Assist to Turnover Ratio
+                            three_pt_pct,              # 3PT%
+                            three_pt_rate,             # 3PT Rate
+                            efg_pct,                   # EFG%
+                            ppp,                       # Points Per Possession
+                            agency,                    # Agency
+                            agent,                     # Agent
+                            agent_num,                 # Agent Phone Number
+                            years_elig,                # Years of Eligibility
+                            nil_min,                   # NIL Min
+                            nil_max,                   # NIL Max
+                            teams_interest,            # Teams Interested
+                            str(fon_list),             # Front Office Notes (as list)
+                            connection_name,           # Connection
+                            connection_details,        # Connection Details
+                            tag,                       # Evaluation Tag
+                            str(sn_list)               # Scouting Notes (as list)
                         ]
+                        def colnum_string(n):
+                            # 1-indexed
+                            string = ''
+                            while n > 0:
+                                n, remainder = divmod(n - 1, 26)
+                                string = chr(65 + remainder) + string
+                            return string
+
+                        row_num = idx[0] + 2  # 1-based, plus header
                         start_col = 1
                         end_col = len(update_row)
-                        row_num = idx[0]+2
-                        col_letters = [chr(ord('A') + i) for i in range(end_col)]
-                        start_cell = f"A{row_num}"
-                        end_cell = f"{col_letters[-1]}{row_num}"
+                        start_cell = f"{colnum_string(start_col)}{row_num}"
+                        end_cell = f"{colnum_string(end_col)}{row_num}"
                         cell_range = f"{start_cell}:{end_cell}"
-                        cell_list = sheet.range(cell_range)
-                        for cell, value in zip(cell_list, update_row):
-                            cell.value = value
-                        sheet.update_cells(cell_list)
+                        # Use update instead of update_cells for reliability
+                        sheet.update(cell_range, [update_row])
                         st.success("Player updated. Please refresh.")
                         st.session_state[f"editing_{i}"] = False
                 if cancel_btn:
