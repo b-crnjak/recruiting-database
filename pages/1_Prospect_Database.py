@@ -185,7 +185,7 @@ else:
             fo_cols[2].markdown(f"**Agent Phone Number:** {agent_num}")
             fo_cols[3].markdown(f"**Years of Eligibility:** {eligibility_years}")
 
-            fo_cols2 = st.columns(4)
+            fo_cols2 = st.columns([1,1,2])
             fo_cols2[0].markdown(f"**NIL Min:** {nil_min}")
             fo_cols2[1].markdown(f"**NIL Max:** {nil_max}")
             fo_cols2[2].markdown(f"**Teams Interested:** {teams_interest}")
@@ -206,7 +206,7 @@ else:
             con_cols[0].markdown(f"**Connection:** {connection_name}")
             con_cols[1].markdown(f"**Connection Details:** {connection_details}")
 
-            st.markdown('<div class="carolina-subheader">Scouting Notes</div>', unsafe_allow_html=True)
+            st.markdown('<div class="carolina-subheader">Scouting Information</div>', unsafe_allow_html=True)
             scout_cols = st.columns([1,3])
             scout_cols[0].markdown(f"**Evaluation Tag:** {tag}")
 
