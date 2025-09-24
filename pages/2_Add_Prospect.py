@@ -89,9 +89,10 @@ with st.form("add_player_form"):
     connection_details = con_cols[1].text_area("Connection Details")
 
     st.header("Scouting Notes")
-    scout_cols = st.columns([1,3])
+    scout_cols = st.columns([1,1,2])
     tag = scout_cols[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "All-Conference"], index=0)
-    scouting_notes_text = scout_cols[1].text_area("Scouting Notes")
+    evaluator = scout_cols[1].text_input("Evaluator Name")
+    scouting_notes_text = scout_cols[2].text_area("Scouting Notes")
 
     submit = st.form_submit_button("Add Player")
 
@@ -109,7 +110,10 @@ if submit:
         if front_office_notes_text:
             front_office_notes = [{"timestamp": now, "text": front_office_notes_text}]
         if scouting_notes_text:
-            scouting_notes = [{"timestamp": now, "text": scouting_notes_text}]
+            scouting_note = {"timestamp": now, "text": scouting_notes_text}
+            if evaluator:
+                scouting_note["evaluator"] = evaluator
+            scouting_notes = [scouting_note]
         row = [
             firstname,                # First Name
             lastname,                 # Last Name

@@ -41,6 +41,19 @@ st.markdown(
         width: 100%;
         display: block;
     }
+    /* Custom editing subheader styling */
+    .editing-subheader {
+        background-color: #8B0000;
+        color: #fff !important;
+        padding: 0.05em 1em;
+        border-radius: 8px;
+        margin-bottom: 0.5em;
+        font-size: 1.25em;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        width: 100%;
+        display: block;
+    }
     </style>
     """,
     unsafe_allow_html=True
@@ -135,7 +148,7 @@ else:
         connection_name = row.get('Connection','')
         connection_details = row.get('Connection Details','')
         tag = row.get('Evaluation Tag','')
-        expander_label = f"**{firstname} {lastname}** · {classification} · {position}"
+        expander_label = f"**{firstname} {lastname}** · {classification} · {position} -- *{tag}*"
         with st.expander(expander_label):
 
             st.markdown("<hr>", unsafe_allow_html=True)
@@ -219,7 +232,17 @@ else:
             st.markdown("**Scouting Notes:**")
             for note in sorted(sn_list, key=lambda x: x.get('timestamp',''), reverse=True):
                 date_str = note.get('timestamp','')[:10]
-                st.markdown(f"<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'><span style='float:right;'>{date_str}</span><br>{note.get('text','')}</div>", unsafe_allow_html=True)
+                evaluator_str = note.get('evaluator','')
+                eval_line = f"<b>Evaluator:</b> {evaluator_str}" if evaluator_str else "<b>Evaluator:</b>"
+                date_line = f"<b>Date:</b> {date_str}"
+                text_line = note.get('text','')
+                st.markdown(f"""
+<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'>
+    <div style='font-weight:bold;'>{eval_line}</div>
+    <div style='font-weight:bold;'>{date_line}</div>
+    <div>{text_line}</div>
+</div>
+""", unsafe_allow_html=True)
             
             action_cols = st.columns([10, 1, 1])
             edit_key = f"edit_{i}"
@@ -245,58 +268,71 @@ else:
                 st.session_state[f"editing_{i}"] = True
 
             if st.session_state[f"editing_{i}"]:
+
                 with st.form(f"edit_form_{i}"):
-                    st.write("**Edit Player Profile**")
+                    st.markdown('<div class="editing-subheader">Player Information</div>', unsafe_allow_html=True)
                     gen_cols = st.columns(4)
-                    first_name = gen_cols[0].text_input("First Name", value=row.get('First Name',''))
-                    last_name = gen_cols[1].text_input("Last Name", value=row.get('Last Name',''))
-                    grad_year = gen_cols[2].number_input("Graduation Year", min_value=1900, max_value=2100, step=1, value=safe_int(row.get('Graduation Year',1900)))
-                    position_options = ["Pure Point", "Wing", "Stretch Big", "Rim Runner"]
-                    position_value = row.get('Position', '')
-                    if position_value in position_options:
-                        position_index = position_options.index(position_value)
-                    else:
-                        position_index = 0
-                    position = gen_cols[3].selectbox("Position", options=position_options, index=position_index)
+                    first_name = gen_cols[0].text_input("First Name", value=row.get('First Name',''), key=f"first_name_{i}")
+                    last_name = gen_cols[1].text_input("Last Name", value=row.get('Last Name',''), key=f"last_name_{i}")
+                    position = gen_cols[2].selectbox("Position", ["", "Pure Point", "Wing", "Stretch Big", "Rim Runner"], index=["", "Pure Point", "Wing", "Stretch Big", "Rim Runner"].index(row.get('Position','')) if row.get('Position','') in ["", "Pure Point", "Wing", "Stretch Big", "Rim Runner"] else 0, key=f"position_{i}")
+                    classification = gen_cols[3].selectbox("Classification", ["", "High School", "College", "International"], index=["", "High School", "College", "International"].index(row.get('Classification','')) if row.get('Classification','') in ["", "High School", "College", "International"] else 0, key=f"classification_{i}")
 
-                    pos_cols = st.columns(4)
-                    classification = pos_cols[0].text_input("Classification", value=row.get('Classification',''))
-                    city = pos_cols[1].text_input("City", value=row.get('City',''))
-                    state = pos_cols[2].text_input("State or Country", value=row.get('State or Country',''))
-                    current_school = pos_cols[3].text_input("Current School/Team", value=row.get('Current School/Team',''))
+                    gen_cols2 = st.columns([1,1,2])
+                    grad_year = gen_cols2[0].number_input("Graduation Year", min_value=1900, max_value=2100, step=1, value=None, key=f"grad_year_{i}")
+                    player_city = gen_cols2[1].text_input("City", value=row.get('City',''), key=f"player_city_{i}")
+                    player_state = gen_cols2[2].text_input("State or Country", value=row.get('State or Country',''), key=f"player_state_{i}")
 
-                    meas_cols = st.columns(4)
-                    height = meas_cols[0].text_input("Height", value=row.get('Height',''))
-                    weight = meas_cols[1].number_input("Weight", min_value=0.0, step=0.1, value=safe_float(row.get('Weight',0)))
-                    points = meas_cols[2].number_input("Points", min_value=0.0, step=0.1, value=safe_float(row.get('Points',0)))
-                    rebounds = meas_cols[3].number_input("Rebounds", min_value=0.0, step=0.1, value=safe_float(row.get('Rebounds',0)))
+                    st.markdown('<div class="editing-subheader">School/Team Information</div>', unsafe_allow_html=True)
+                    team_cols = st.columns([1,1,2])
+                    current_school = team_cols[0].text_input("Team Name", value=row.get('Current School/Team',''), key=f"current_school_{i}")
+                    school_city = team_cols[1].text_input("City", value=row.get('School City',''), key=f"school_city_{i}")
+                    school_state = team_cols[2].text_input("State or Country", value=row.get('School State',''), key=f"school_state_{i}")
 
-                    stat_cols = st.columns(4)
-                    assists = stat_cols[0].number_input("Assists", min_value=0.0, step=0.1, value=safe_float(row.get('Assists',0)))
-                    ast_to_to = stat_cols[1].number_input("Ast/TO Ratio", min_value=0.0, step=0.1, value=safe_float(row.get('Assist to Turnover Ratio',0)))
-                    three_pt_pct = stat_cols[2].number_input("3PT%", min_value=0.0, step=0.1, value=safe_float(row.get('3PT%',0)))
-                    three_pt_rate = stat_cols[3].number_input("3PT Rate", min_value=0.0, step=0.1, value=safe_float(row.get('3PT Rate',0)))
+                    team_cols2 = st.columns(1)
+                    past_schools = team_cols2[0].text_area("Past School(s)/Team(s)", value=row.get('Past School(s)/Team(s)',''), key=f"past_schools_{i}")
 
-                    stat_cols2 = st.columns(4)
-                    efg_pct = stat_cols2[0].number_input("EFG%", min_value=0.0, step=0.1, value=safe_float(row.get('EFG%',0)))
-                    ppp = stat_cols2[1].number_input("PPP", min_value=0.0, step=0.1, value=safe_float(row.get('Points Per Possession',0)))
-                    agent = stat_cols2[2].text_input("Agent", value=row.get('Agent',''))
-                    years_elig = stat_cols2[3].number_input("Years of Eligibility", min_value=0, step=1, value=safe_int(row.get('Years of Eligibility',0)))
+                    st.markdown('<div class="editing-subheader">Measureables and Statistics</div>', unsafe_allow_html=True)
+                    meas_cols = st.columns([1,1,2])
+                    height = meas_cols[0].text_input("Height", value=row.get('Height',''), key=f"height_{i}")
+                    weight = meas_cols[1].number_input("Weight", min_value=0.0, step=0.1, value=safe_float(row.get('Weight',0)), key=f"weight_{i}")
 
-                    # Display non-editable fields
-                    # Add all fields as editable widgets
-                    school_city = st.text_input("School City", value=row.get('School City',''))
-                    school_state = st.text_input("School State", value=row.get('School State',''))
-                    past_schools = st.text_area("Past School(s)/Team(s)", value=row.get('Past School(s)/Team(s)',''))
-                    agent_num = st.text_input("Agent Phone Number", value=row.get('Agent Phone Number',''))
-                    nil_min = st.number_input("NIL Min", min_value=0.0, step=100.0, value=float(row.get('NIL Min',0)) if row.get('NIL Min','') else 0.0, format="%.0f")
-                    nil_max = st.number_input("NIL Max", min_value=0.0, step=100.0, value=float(row.get('NIL Max',0)) if row.get('NIL Max','') else 0.0, format="%.0f")
-                    teams_interest = st.text_input("Teams Interested", value=row.get('Teams Interested',''))
+                    meas_cols2 = st.columns(4)
+                    points = meas_cols2[0].number_input("Points", min_value=0.0, step=0.1, value=safe_float(row.get('Points',0)), key=f"points_{i}")
+                    rebounds = meas_cols2[1].number_input("Rebounds", min_value=0.0, step=0.1, value=safe_float(row.get('Rebounds',0)), key=f"rebounds_{i}")
+                    assists = meas_cols2[2].number_input("Assists", min_value=0.0, step=0.1, value=safe_float(row.get('Assists',0)), key=f"assists_{i}")
+                    ast_to_to = meas_cols2[3].number_input("Assist to Turnover Ratio", min_value=0.0, step=0.1, value=safe_float(row.get('Assist to Turnover Ratio',0)), key=f"ast_to_to_{i}")
 
-                    # Add note fields (append only)
-                    notes_cols = st.columns(2)
-                    new_front_office_note = notes_cols[0].text_area("Add Front Office Note", value="")
-                    new_scouting_note = notes_cols[1].text_area("Add Scouting Note", value="")
+                    meas_cols3 = st.columns(4)
+                    three_pt_pct = meas_cols3[0].number_input("3PT%", min_value=0.0, max_value=100.0, step=0.1, value=safe_float(row.get('3PT%',0)), key=f"three_pt_pct_{i}")
+                    three_pt_rate = meas_cols3[1].number_input("3PT Rate", min_value=0.0, step=0.1, value=safe_float(row.get('3PT Rate',0)), key=f"three_pt_rate_{i}")
+                    efg_pct = meas_cols3[2].number_input("EFG%", min_value=0.0, step=0.1, value=safe_float(row.get('EFG%',0)), key=f"efg_pct_{i}")
+                    ppp = meas_cols3[3].number_input("Points Per Possession", min_value=0.0, step=0.1, value=safe_float(row.get('Points Per Possession',0)), key=f"ppp_{i}")
+
+                    st.markdown('<div class="editing-subheader">Front Office Information</div>', unsafe_allow_html=True)
+                    fo_cols = st.columns(4)
+                    agency = fo_cols[0].text_input("Agency", value=row.get('Agency',''), key=f"agency_{i}")
+                    agent = fo_cols[1].text_input("Agent", value=row.get('Agent',''), key=f"agent_{i}")
+                    agent_num = fo_cols[2].text_input("Agent Phone Number", value=row.get('Agent Phone Number',''), key=f"agent_num_{i}")
+                    years_elig = fo_cols[3].number_input("Years of Eligibility", min_value=0, step=1, value=safe_int(row.get('Years of Eligibility',0)), key=f"years_elig_{i}")
+
+                    fo_cols2 = st.columns([1,1,2])
+                    nil_min = fo_cols2[0].number_input("NIL Min", min_value=0.0, step=100.0, value=float(row.get('NIL Min',0)) if row.get('NIL Min','') else 0.0, format="%.0f", key=f"nil_min_{i}")
+                    nil_max = fo_cols2[1].number_input("NIL Max", min_value=0.0, step=100.0, value=float(row.get('NIL Max',0)) if row.get('NIL Max','') else 0.0, format="%.0f", key=f"nil_max_{i}")
+                    teams_interest = fo_cols2[2].text_input("Teams Interested", value=row.get('Teams Interested',''), key=f"teams_interest_{i}")
+
+                    fo_cols3 = st.columns(1)
+                    new_front_office_note = fo_cols3[0].text_area("Add Front Office Note", value="", key=f"new_fo_note_{i}")
+
+                    st.markdown('<div class="editing-subheader">Connection Details</div>', unsafe_allow_html=True)
+                    con_cols = st.columns([1,3])
+                    connection_name = con_cols[0].selectbox("Connection", ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"], index=["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"].index(row.get('Connection','')) if row.get('Connection','') in ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"] else 0, key=f"connection_name_main_{i}")
+                    connection_details = con_cols[1].text_area("Connection Details", value=row.get('Connection Details',''), key=f"connection_details_main_{i}")
+
+                    st.markdown('<div class="editing-subheader">Scouting Notes</div>', unsafe_allow_html=True)
+                    scout_cols = st.columns([1,1,2])
+                    tag = scout_cols[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "All-Conference"], index=["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "All-Conference"].index(row.get('Evaluation Tag','')) if row.get('Evaluation Tag','') in ["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "All-Conference"] else 0, key=f"tag_main_{i}")
+                    new_evaluator = scout_cols[1].text_input("Evaluator Name", value="", key=f"new_evaluator_{i}")
+                    new_scouting_note = scout_cols[2].text_area("Add Scouting Note", value="", key=f"new_scouting_note_{i}")
 
                     # Parse previous notes as lists
                     import ast
@@ -312,21 +348,6 @@ else:
                         if not isinstance(sn_list, list): sn_list = []
                     except Exception:
                         sn_list = []
-
-                    # Display all previous notes as cards
-                    notes_cols[0].markdown("**Previous Front Office Notes:**")
-                    for note in sorted(fon_list, key=lambda x: x.get('timestamp',''), reverse=True):
-                        date_str = note.get('timestamp','')[:10]
-                        notes_cols[0].markdown(f"<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'><span style='float:right;'>{date_str}</span><br>{note.get('text','')}</div>", unsafe_allow_html=True)
-                    notes_cols[1].markdown("**Previous Scouting Notes:**")
-                    for note in sorted(sn_list, key=lambda x: x.get('timestamp','') or '', reverse=True):
-                        date_str = note.get('timestamp','')[:10]
-                        notes_cols[1].markdown(f"<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'><span style='float:right;'>{date_str}</span><br>{note.get('text','')}</div>", unsafe_allow_html=True)
-
-                    notes_cols2 = st.columns([2,1,1])
-                    connection_details = notes_cols2[0].text_area("Connection Details", value=row.get('Connection Details',''))
-                    connection_name = notes_cols2[1].selectbox("Connection", options=["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"], index=["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"].index(row.get('Connection','')) if row.get('Connection','') in ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"] else 0)
-                    tag = notes_cols2[2].selectbox("Evaluation Tag", options=["", "Need to Evaluate", "Reject", "Hold","Bench", "Starter", "All-Conference"], index=["", "Need to Evaluate", "Reject", "Hold","Bench", "Starter", "All-Conference"].index(row.get('Evaluation Tag','')) if row.get('Evaluation Tag','') in ["", "Need to Evaluate", "Reject", "Hold","Bench", "Starter", "All-Conference"] else 0)
 
                     save_btn = st.form_submit_button("Save Changes")
                     cancel_btn = st.form_submit_button("Cancel")
@@ -351,15 +372,18 @@ else:
                         if new_front_office_note.strip():
                             fon_list.append({"timestamp": now, "text": new_front_office_note.strip()})
                         if new_scouting_note.strip():
-                            sn_list.append({"timestamp": now, "text": new_scouting_note.strip()})
+                            scouting_note = {"timestamp": now, "text": new_scouting_note.strip()}
+                            if new_evaluator.strip():
+                                scouting_note["evaluator"] = new_evaluator.strip()
+                            sn_list.append(scouting_note)
                         update_row = [
                             first_name,                # First Name
                             last_name,                 # Last Name
                             position,                  # Position
                             classification,            # Classification
                             grad_year,                 # Graduation Year
-                            city,                      # City
-                            state,                     # State or Country
+                            player_city,               # City
+                            player_state,              # State or Country
                             current_school,            # Current School/Team
                             school_city,               # School City
                             school_state,              # School State
