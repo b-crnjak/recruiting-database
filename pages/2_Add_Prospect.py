@@ -21,11 +21,11 @@ with st.form("add_player_form"):
     gen_cols = st.columns(4)
     firstname = gen_cols[0].text_input("First Name *")
     lastname = gen_cols[1].text_input("Last Name *")
-    position = gen_cols[2].selectbox("Position *", ["Pure Point", "Wing", "Stretch Big", "Rim Runner"])
-    classification = gen_cols[3].selectbox("Classification *", ["High School", "College", "International"])
+    position = gen_cols[2].selectbox("Position *", ["","Pure Point", "Wing", "Stretch Big", "Rim Runner"])
+    classification = gen_cols[3].selectbox("Classification *", ["","High School", "College", "International"])
     
     gen_cols2 = st.columns([1,1,2])
-    grad_year = gen_cols2[0].number_input("Graduation Year *", min_value=1900, max_value=2100, step=1, format="%d", value=2026)
+    grad_year = gen_cols2[0].number_input("Graduation Year", min_value=1900, max_value=2100, step=1, format="%d", value=None)
     player_city = gen_cols2[1].text_input("City", key="player_city")
     player_state = gen_cols2[2].text_input("State or Country", key="player_state")
 
@@ -75,7 +75,7 @@ with st.form("add_player_form"):
     agent_num = fo_cols[2].text_input("Agent Phone Number")
     eligibility_years = fo_cols[3].number_input("Years of Eligibility", min_value=0, step=1, format="%d", value=None)
 
-    fo_cols2 = st.columns(4)
+    fo_cols2 = st.columns([1,1,2])
     nil_min = fo_cols2[0].number_input("NIL Min", min_value=0.0, step=100.0, format="%.0f", value=None)
     nil_max = fo_cols2[1].number_input("NIL Max", min_value=0.0, step=100.0, format="%.0f", value=None)
     teams_interest = fo_cols2[2].text_input("Teams Interested")
@@ -90,13 +90,13 @@ with st.form("add_player_form"):
 
     st.header("Scouting Notes")
     scout_cols = st.columns([1,3])
-    tag = scout_cols[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Bench", "Starter", "All-Conference"])
+    tag = scout_cols[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "All-Conference"], index=0)
     scouting_notes_text = scout_cols[1].text_area("Scouting Notes")
 
     submit = st.form_submit_button("Add Player")
 
 if submit:
-    required_fields = [firstname, lastname, position, classification, grad_year, current_school]
+    required_fields = [firstname, lastname, position, classification, current_school]
     height_error = False
     if height and not height_valid:
         height_error = True

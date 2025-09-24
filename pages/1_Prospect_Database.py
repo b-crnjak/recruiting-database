@@ -326,7 +326,7 @@ else:
                     notes_cols2 = st.columns([2,1,1])
                     connection_details = notes_cols2[0].text_area("Connection Details", value=row.get('Connection Details',''))
                     connection_name = notes_cols2[1].selectbox("Connection", options=["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"], index=["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"].index(row.get('Connection','')) if row.get('Connection','') in ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"] else 0)
-                    tag = notes_cols2[2].selectbox("Evaluation Tag", options=["", "Need to Evaluate", "Bench", "Starter", "All-Conference"], index=["", "Need to Evaluate", "Bench", "Starter", "All-Conference"].index(row.get('Evaluation Tag','')) if row.get('Evaluation Tag','') in ["", "Need to Evaluate", "Bench", "Starter", "All-Conference"] else 0)
+                    tag = notes_cols2[2].selectbox("Evaluation Tag", options=["", "Need to Evaluate", "Reject", "Hold","Bench", "Starter", "All-Conference"], index=["", "Need to Evaluate", "Reject", "Hold","Bench", "Starter", "All-Conference"].index(row.get('Evaluation Tag','')) if row.get('Evaluation Tag','') in ["", "Need to Evaluate", "Reject", "Hold","Bench", "Starter", "All-Conference"] else 0)
 
                     save_btn = st.form_submit_button("Save Changes")
                     cancel_btn = st.form_submit_button("Cancel")
