@@ -63,7 +63,7 @@ with st.form("filter_form"):
     filter_position = cols2[3].selectbox("Position", ["", "Pure Point", "Wing", "Stretch Big", "Rim Runner"])
 
     cols3 = st.columns(4)
-    filter_tag = cols3[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Bench", "Starter", "All-Conference"])
+    filter_tag = cols3[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "All-Conference"])
     filter_connection = cols3[1].selectbox("Connection", ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"])
 
     filter_submit = st.form_submit_button("Apply Filters")
