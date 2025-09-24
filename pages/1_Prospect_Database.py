@@ -135,7 +135,7 @@ else:
         connection_name = row.get('Connection','')
         connection_details = row.get('Connection Details','')
         tag = row.get('Evaluation Tag','')
-        expander_label = f"**{firstname} {lastname}** · {position}"
+        expander_label = f"**{firstname} {lastname}** · {classification} · {position}"
         with st.expander(expander_label):
 
             st.markdown("<hr>", unsafe_allow_html=True)
