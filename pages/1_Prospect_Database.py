@@ -149,6 +149,7 @@ else:
         connection_details = row.get('Connection Details','')
         tag = row.get('Evaluation Tag','')
         expander_label = f"**{firstname} {lastname}** · {classification} · {position} -- *{tag}*"
+
         with st.expander(expander_label):
 
             st.markdown("<hr>", unsafe_allow_html=True)
@@ -222,6 +223,9 @@ else:
             st.markdown('<div class="carolina-subheader">Scouting Information</div>', unsafe_allow_html=True)
             scout_cols = st.columns([1,3])
             scout_cols[0].markdown(f"**Evaluation Tag:** {tag}")
+            synergy_url = row.get('Synergy Link', '').strip() if 'Synergy Link' in row else ''
+            if synergy_url:
+                scout_cols[1].markdown(f"[Synergy Link]({synergy_url})", unsafe_allow_html=True)
 
             # Front Office Notes as cards
             sn_list = []
