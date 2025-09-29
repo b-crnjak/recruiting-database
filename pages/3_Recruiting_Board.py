@@ -1,6 +1,46 @@
 import streamlit as st
 import pandas as pd
+def save_boards_to_sheet(boards):
+    boards_ws = sheet.spreadsheet.worksheet('boards')
+    rows = []
+    for board_name, positions in boards.items():
+        row = {
+            "Board Name": board_name,
+            "Point Guard": ", ".join(positions.get("Point Guard", [])),
+            "Shooting Guard": ", ".join(positions.get("Shooting Guard", [])),
+            "Small Forward": ", ".join(positions.get("Small Forward", [])),
+            "Power Forward": ", ".join(positions.get("Power Forward", [])),
+            "Center": ", ".join(positions.get("Center", [])),
+        }
+        rows.append(row)
+    boards_ws.clear()
+    header = ["Board Name", "Point Guard", "Shooting Guard", "Small Forward", "Power Forward", "Center"]
+    boards_ws.append_row(header)
+    for row in rows:
+        boards_ws.append_row([row[h] for h in header])
 from db_utils import sheet
+
+def save_boards_to_sheet(boards):
+    # Open the boards worksheet
+    boards_ws = sheet.spreadsheet.worksheet('boards')
+    # Prepare rows
+    rows = []
+    for board_name, positions in boards.items():
+        row = {
+            "Board Name": board_name,
+            "Point Guard": ", ".join(positions.get("Point Guard", [])),
+            "Shooting Guard": ", ".join(positions.get("Shooting Guard", [])),
+            "Small Forward": ", ".join(positions.get("Small Forward", [])),
+            "Power Forward": ", ".join(positions.get("Power Forward", [])),
+            "Center": ", ".join(positions.get("Center", [])),
+        }
+        rows.append(row)
+    # Clear and update the worksheet
+    boards_ws.clear()
+    header = ["Board Name", "Point Guard", "Shooting Guard", "Small Forward", "Power Forward", "Center"]
+    boards_ws.append_row(header)
+    for row in rows:
+        boards_ws.append_row([row[h] for h in header])
 
 # Page Configuration
 st.markdown(
@@ -37,19 +77,29 @@ st.header("Recruiting Board")
 players = sheet.get_all_records()
 df = pd.DataFrame(players)
 
-# Board names (can be expanded)
-default_boards = ["Priority Board", "Watchlist", "2025 Targets"]
 positions = ["Point Guard", "Shooting Guard", "Small Forward", "Power Forward", "Center"]
 
-if "boards" not in st.session_state:
-    st.session_state["boards"] = {name: {pos: [] for pos in positions} for name in default_boards}
-else:
-    # Migrate any boards that are still lists to dict-of-lists
-    for board_name, board_val in st.session_state["boards"].items():
-        if isinstance(board_val, list):
-            # Convert old list to dict with all players in 'Point Guard' by default
-            st.session_state["boards"][board_name] = {pos: [] for pos in positions}
-            st.session_state["boards"][board_name]["Point Guard"] = board_val
+# Load Boards Data from Google Sheet
+try:
+    boards_sheet = sheet.spreadsheet.worksheet('boards')
+except Exception:
+    st.error("Could not find 'boards' worksheet in the Google Sheet.")
+    st.stop()
+
+boards_records = boards_sheet.get_all_records()
+boards_dict = {}
+for row in boards_records:
+    board_name = row.get("Board Name", "")
+    if not board_name:
+        continue
+    boards_dict[board_name] = {
+        "Point Guard": [p.strip() for p in row.get("Point Guard", "").split(",") if p.strip()],
+        "Shooting Guard": [p.strip() for p in row.get("Shooting Guard", "").split(",") if p.strip()],
+        "Small Forward": [p.strip() for p in row.get("Small Forward", "").split(",") if p.strip()],
+        "Power Forward": [p.strip() for p in row.get("Power Forward", "").split(",") if p.strip()],
+        "Center": [p.strip() for p in row.get("Center", "").split(",") if p.strip()],
+    }
+st.session_state["boards"] = boards_dict
 
 
 # Expander for board selection and creation
@@ -65,12 +115,15 @@ with st.expander("**Board Selection**", expanded=False):
         new_board = st.session_state.get("new_board_name", "")
         if new_board and new_board not in st.session_state["boards"]:
             st.session_state["boards"][new_board] = {pos: [] for pos in positions}
+            # Save to Google Sheet
+            save_boards_to_sheet(st.session_state["boards"])
 
     with top_cols[1]:
         new_board_name = st.text_input("Create Board:", key="new_board_name")
         if st.button("Create", key="confirm_create_board_btn"):
             if new_board_name and new_board_name not in st.session_state["boards"]:
                 st.session_state["boards"][new_board_name] = {pos: [] for pos in positions}
+                save_boards_to_sheet(st.session_state["boards"])
 
     with top_cols[2]:
         def remove_board_callback():
@@ -89,6 +142,7 @@ with st.expander("**Board Selection**", expanded=False):
         if st.button("Remove", key="confirm_remove_board_btn"):
             if remove_board_selected and remove_board_selected in st.session_state["boards"]:
                 del st.session_state["boards"][remove_board_selected]
+                save_boards_to_sheet(st.session_state["boards"])
 
 with st.expander("**Edit Selected Board**", expanded=False):
     row1 = st.columns([2,1,2,1])
@@ -108,12 +162,14 @@ with st.expander("**Edit Selected Board**", expanded=False):
     if row2[0].button("Add Player", key=f"add_btn_{selected_board}") and add_player and add_position:
         if add_player in available_players:
             st.session_state["boards"][selected_board][add_position].append(add_player)
+            save_boards_to_sheet(st.session_state["boards"])
             st.success(f"Added {add_player} to {add_position}")
         else:
             st.warning(f"Player '{add_player}' not found or already on board.")
     if row2[1].button("Remove Player", key=f"remove_btn_{selected_board}_any") and remove_player and remove_position:
         if remove_player in st.session_state["boards"][selected_board][remove_position]:
             st.session_state["boards"][selected_board][remove_position].remove(remove_player)
+            save_boards_to_sheet(st.session_state["boards"])
             st.success(f"Removed {remove_player} from {remove_position}")
         else:
             st.info(f"{remove_player} was not found in {remove_position}.")
@@ -128,9 +184,14 @@ with st.expander(board_view_label, expanded=True):
             for idx, player in enumerate(players_list):
                 col1, col2, col3 = board_cols[i].columns([6,1,1])
                 col1.write(player)
+                moved = False
                 if col2.button("↑", key=f"up_{selected_board}_{pos}_{idx}") and idx > 0:
                     players_list[idx], players_list[idx-1] = players_list[idx-1], players_list[idx]
+                    moved = True
                 if col3.button("↓", key=f"down_{selected_board}_{pos}_{idx}") and idx < len(players_list)-1:
                     players_list[idx], players_list[idx+1] = players_list[idx+1], players_list[idx]
+                    moved = True
+                if moved:
+                    save_boards_to_sheet(st.session_state["boards"])
         else:
             board_cols[i].info("No players yet.")
