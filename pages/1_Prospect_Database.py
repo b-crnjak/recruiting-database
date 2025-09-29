@@ -144,7 +144,10 @@ else:
         eligibility_years = row.get('Years of Eligibility','')
         nil_min = row.get('NIL Min','') if 'NIL Min' in row else ''
         nil_max = row.get('NIL Max','') if 'NIL Max' in row else ''
+        int_nil_min = row.get('Internal NIL Min','') if 'Internal NIL Min' in row else ''
+        int_nil_max = row.get('Internal NIL Max','') if 'Internal NIL Max' in row else ''
         teams_interest = row.get('Teams Interested','') if 'Teams Interested' in row else ''
+        team_committed = row.get('Team Committed To','') if 'Team Committed To' in row else ''
         connection_name = row.get('Connection','')
         connection_details = row.get('Connection Details','')
         tag = row.get('Evaluation Tag','')
@@ -199,10 +202,15 @@ else:
             fo_cols[2].markdown(f"**Agent Phone Number:** {agent_num}")
             fo_cols[3].markdown(f"**Years of Eligibility:** {eligibility_years}")
 
-            fo_cols2 = st.columns([1,1,2])
+            fo_cols2 = st.columns([1,1,1,1])
             fo_cols2[0].markdown(f"**NIL Min:** {nil_min}")
             fo_cols2[1].markdown(f"**NIL Max:** {nil_max}")
-            fo_cols2[2].markdown(f"**Teams Interested:** {teams_interest}")
+            fo_cols2[2].markdown(f"**Internal NIL Min:** {int_nil_min}")
+            fo_cols2[3].markdown(f"**Internal NIL Max:** {int_nil_max}")
+
+            fo_cols3 = st.columns([2,1,1])
+            fo_cols3[0].markdown(f"**Teams Interested:** {teams_interest}")
+            fo_cols3[1].markdown(f"**Team Committed To:** {team_committed}")
 
             # Front Office Notes as cards
             fon_list = []
@@ -319,13 +327,18 @@ else:
                     agent_num = fo_cols[2].text_input("Agent Phone Number", value=row.get('Agent Phone Number',''), key=f"agent_num_{i}")
                     years_elig = fo_cols[3].number_input("Years of Eligibility", min_value=0, step=1, value=safe_int(row.get('Years of Eligibility',0)), key=f"years_elig_{i}")
 
-                    fo_cols2 = st.columns([1,1,2])
+                    fo_cols2 = st.columns([1,1,1,1])
                     nil_min = fo_cols2[0].number_input("NIL Min", min_value=0.0, step=100.0, value=float(row.get('NIL Min',0)) if row.get('NIL Min','') else 0.0, format="%.0f", key=f"nil_min_{i}")
                     nil_max = fo_cols2[1].number_input("NIL Max", min_value=0.0, step=100.0, value=float(row.get('NIL Max',0)) if row.get('NIL Max','') else 0.0, format="%.0f", key=f"nil_max_{i}")
-                    teams_interest = fo_cols2[2].text_input("Teams Interested", value=row.get('Teams Interested',''), key=f"teams_interest_{i}")
+                    int_nil_min = fo_cols2[2].number_input("Internal NIL Min", min_value=0.0, step=100.0, value=float(row.get('Internal NIL Min',0)) if row.get('Internal NIL Min','') else 0.0, format="%.0f", key=f"int_nil_min_{i}")
+                    int_nil_max = fo_cols2[3].number_input("Internal NIL Max", min_value=0.0, step=100.0, value=float(row.get('Internal NIL Max',0)) if row.get('Internal NIL Max','') else 0.0, format="%.0f", key=f"int_nil_max_{i}")
 
-                    fo_cols3 = st.columns(1)
-                    new_front_office_note = fo_cols3[0].text_area("Add Front Office Note", value="", key=f"new_fo_note_{i}")
+                    fo_cols3 = st.columns([2,1,1])
+                    teams_interest = fo_cols3[0].text_input("Teams Interested", value=row.get('Teams Interested',''), key=f"teams_interest_{i}")
+                    team_committed = fo_cols3[1].text_input("Team Committed To", value=row.get('Team Committed To',''), key=f"team_committed_{i}")
+
+                    fo_cols4 = st.columns(1)
+                    new_front_office_note = fo_cols4[0].text_area("Add Front Office Note", value="", key=f"new_fo_note_{i}")
 
                     st.markdown('<div class="editing-subheader">Connection Details</div>', unsafe_allow_html=True)
                     con_cols = st.columns([1,3])
@@ -408,7 +421,10 @@ else:
                             years_elig,                # Years of Eligibility
                             nil_min,                   # NIL Min
                             nil_max,                   # NIL Max
+                            int_nil_min,               # Internal NIL Min
+                            int_nil_max,               # Internal NIL Max
                             teams_interest,            # Teams Interested
+                            team_committed,            # Team Committed To
                             str(fon_list),             # Front Office Notes (as list)
                             connection_name,           # Connection
                             connection_details,        # Connection Details

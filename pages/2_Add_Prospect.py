@@ -75,13 +75,19 @@ with st.form("add_player_form"):
     agent_num = fo_cols[2].text_input("Agent Phone Number")
     eligibility_years = fo_cols[3].number_input("Years of Eligibility", min_value=0, step=1, format="%d", value=None)
 
-    fo_cols2 = st.columns([1,1,2])
-    nil_min = fo_cols2[0].number_input("NIL Min", min_value=0.0, step=100.0, format="%.0f", value=None)
-    nil_max = fo_cols2[1].number_input("NIL Max", min_value=0.0, step=100.0, format="%.0f", value=None)
-    teams_interest = fo_cols2[2].text_input("Teams Interested")
+    fo_cols2 = st.columns([1,1,1,1])
+    nil_min = fo_cols2[0].number_input("Requested NIL Min", min_value=0.0, step=100.0, format="%.0f", value=None)
+    nil_max = fo_cols2[1].number_input("Requested NIL Max", min_value=0.0, step=100.0, format="%.0f", value=None)
+    int_nil_min = fo_cols2[2].number_input("Internal NIL Min", min_value=0.0, step=100.0, format="%.0f", value=None)
+    int_nil_max = fo_cols2[3].number_input("Internal NIL Max", min_value=0.0, step=100.0, format="%.0f", value=None)
 
-    fo_cols3 = st.columns(1)
-    front_office_notes_text = fo_cols3[0].text_area("Front Office Notes")
+    fo_cols3 = st.columns([2,1,1])
+    teams_interest = fo_cols3[0].text_input("Teams Interested")
+    team_committed = fo_cols3[1].text_input("Team Committed To")
+
+
+    fo_cols4 = st.columns(1)
+    front_office_notes_text = fo_cols4[0].text_area("Front Office Notes")
 
     st.header("Connection Details")
     con_cols = st.columns([1,3])
@@ -142,7 +148,10 @@ if submit:
             eligibility_years,        # Years of Eligibility
             nil_min,                  # NIL Min
             nil_max,                  # NIL Max
+            int_nil_min,              # Internal NIL Min
+            int_nil_max,              # Internal NIL Max
             teams_interest,           # Teams Interested
+            team_committed,           # Team Committed To
             str(front_office_notes),  # Front Office Notes (as list)
             connection_name,          # Connection
             connection_details,       # Connection Details
