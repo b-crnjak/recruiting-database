@@ -142,8 +142,8 @@ else:
         agent = row.get('Agent','')
         agent_num = row.get('Agent Phone Number','') if 'Agent Phone Number' in row else ''
         eligibility_years = row.get('Years of Eligibility','')
-        nil_min = row.get('NIL Min','') if 'NIL Min' in row else ''
-        nil_max = row.get('NIL Max','') if 'NIL Max' in row else ''
+        nil_min = row.get('Requested NIL Min','') if 'Requested NIL Min' in row else ''
+        nil_max = row.get('Requested NIL Max','') if 'Requested NIL Max' in row else ''
         int_nil_min = row.get('Internal NIL Min','') if 'Internal NIL Min' in row else ''
         int_nil_max = row.get('Internal NIL Max','') if 'Internal NIL Max' in row else ''
         teams_interest = row.get('Teams Interested','') if 'Teams Interested' in row else ''
@@ -203,8 +203,8 @@ else:
             fo_cols[3].markdown(f"**Years of Eligibility:** {eligibility_years}")
 
             fo_cols2 = st.columns([1,1,1,1])
-            fo_cols2[0].markdown(f"**NIL Min:** {nil_min}")
-            fo_cols2[1].markdown(f"**NIL Max:** {nil_max}")
+            fo_cols2[0].markdown(f"**Requested NIL Min:** {nil_min}")
+            fo_cols2[1].markdown(f"**Requested NIL Max:** {nil_max}")
             fo_cols2[2].markdown(f"**Internal NIL Min:** {int_nil_min}")
             fo_cols2[3].markdown(f"**Internal NIL Max:** {int_nil_max}")
 
@@ -328,8 +328,8 @@ else:
                     years_elig = fo_cols[3].number_input("Years of Eligibility", min_value=0, step=1, value=safe_int(row.get('Years of Eligibility',0)), key=f"years_elig_{i}")
 
                     fo_cols2 = st.columns([1,1,1,1])
-                    nil_min = fo_cols2[0].number_input("NIL Min", min_value=0.0, step=100.0, value=float(row.get('NIL Min',0)) if row.get('NIL Min','') else 0.0, format="%.0f", key=f"nil_min_{i}")
-                    nil_max = fo_cols2[1].number_input("NIL Max", min_value=0.0, step=100.0, value=float(row.get('NIL Max',0)) if row.get('NIL Max','') else 0.0, format="%.0f", key=f"nil_max_{i}")
+                    nil_min = fo_cols2[0].number_input("Requested NIL Min", min_value=0.0, step=100.0, value=float(row.get('NIL Min',0)) if row.get('NIL Min','') else 0.0, format="%.0f", key=f"nil_min_{i}")
+                    nil_max = fo_cols2[1].number_input("Requested NIL Max", min_value=0.0, step=100.0, value=float(row.get('NIL Max',0)) if row.get('NIL Max','') else 0.0, format="%.0f", key=f"nil_max_{i}")
                     int_nil_min = fo_cols2[2].number_input("Internal NIL Min", min_value=0.0, step=100.0, value=float(row.get('Internal NIL Min',0)) if row.get('Internal NIL Min','') else 0.0, format="%.0f", key=f"int_nil_min_{i}")
                     int_nil_max = fo_cols2[3].number_input("Internal NIL Max", min_value=0.0, step=100.0, value=float(row.get('Internal NIL Max',0)) if row.get('Internal NIL Max','') else 0.0, format="%.0f", key=f"int_nil_max_{i}")
 
@@ -419,8 +419,8 @@ else:
                             agent,                     # Agent
                             agent_num,                 # Agent Phone Number
                             years_elig,                # Years of Eligibility
-                            nil_min,                   # NIL Min
-                            nil_max,                   # NIL Max
+                            nil_min,                   # Requested NIL Min
+                            nil_max,                   # Requested NIL Max
                             int_nil_min,               # Internal NIL Min
                             int_nil_max,               # Internal NIL Max
                             teams_interest,            # Teams Interested
