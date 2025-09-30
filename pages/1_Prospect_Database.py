@@ -124,6 +124,7 @@ else:
         grad_year = row.get('Graduation Year','')
         player_city = row.get('City','')
         player_state = row.get('State or Country','')
+        player_num = row.get('Player Phone #','')
         current_school = row.get('Current School/Team','')
         school_city = row.get('School City','') if 'School City' in row else ''
         school_state = row.get('School State','') if 'School State' in row else ''
@@ -148,6 +149,14 @@ else:
         int_nil_max = row.get('Internal NIL Max','') if 'Internal NIL Max' in row else ''
         teams_interest = row.get('Teams Interested','') if 'Teams Interested' in row else ''
         team_committed = row.get('Team Committed To','') if 'Team Committed To' in row else ''
+        mother_name = row.get("Mother Name",'')
+        father_name = row.get("Father Name",'')
+        hs_coach_name = row.get("HS Coach Name",'')
+        aau_coach_name = row.get("AAU Coach Name",'')
+        mother_num = row.get("Mother Phone #",'')
+        father_num = row.get("Father Phone #",'')
+        hs_coach_num = row.get("HS Coach Phone #",'')
+        aau_coach_num = row.get("AAU Coach Phone #",'')
         connection_name = row.get('Connection','')
         connection_details = row.get('Connection Details','')
         tag = row.get('Evaluation Tag','')
@@ -164,10 +173,11 @@ else:
             gen_cols[2].markdown(f"**Position:** {position}")
             gen_cols[3].markdown(f"**Classification:** {classification}")
 
-            gen_cols2 = st.columns([1,1,2])
+            gen_cols2 = st.columns([1,1,1,1])
             gen_cols2[0].markdown(f"**Graduation Year:** {grad_year}")
             gen_cols2[1].markdown(f"**City:** {player_city}")
             gen_cols2[2].markdown(f"**State or Country:** {player_state}")
+            gen_cols2[3].markdown(f"**Player Phone #:** {player_num}")
 
             st.markdown('<div class="carolina-subheader">School/Team Information</div>', unsafe_allow_html=True)
             team_cols = st.columns([2,1,2])
@@ -223,6 +233,19 @@ else:
                 date_str = note.get('timestamp','')[:10]
                 st.markdown(f"<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'><span style='float:right;'>{date_str}</span><br>{note.get('text','')}</div>", unsafe_allow_html=True)
 
+            st.markdown('<div class="carolina-subheader">Primary Contacts</div>', unsafe_allow_html=True)
+            pc_cols = st.columns(4)
+            pc_cols[0].markdown(f"**Mother Name:** {mother_name}")
+            pc_cols[1].markdown(f"**Father Name:** {father_name}")
+            pc_cols[2].markdown(f"**HS Coach Name:** {hs_coach_name}")
+            pc_cols[3].markdown(f"**AAU Coach Name:** {aau_coach_name}")
+
+            pc_cols2 = st.columns(4)
+            pc_cols2[0].markdown(f"**Mother Phone #:** {mother_num}")
+            pc_cols2[1].markdown(f"**Father Phone #:** {father_num}")
+            pc_cols2[2].markdown(f"**HS Coach Phone #:** {hs_coach_num}")
+            pc_cols2[3].markdown(f"**AAU Coach Phone #:** {aau_coach_num}")
+            
             st.markdown('<div class="carolina-subheader">Connection Details</div>', unsafe_allow_html=True)
             con_cols = st.columns([1,3])
             con_cols[0].markdown(f"**Connection:** {connection_name}")
@@ -289,10 +312,11 @@ else:
                     position = gen_cols[2].selectbox("Position", ["", "Pure Point", "Wing", "Stretch Big", "Rim Runner"], index=["", "Pure Point", "Wing", "Stretch Big", "Rim Runner"].index(row.get('Position','')) if row.get('Position','') in ["", "Pure Point", "Wing", "Stretch Big", "Rim Runner"] else 0, key=f"position_{i}")
                     classification = gen_cols[3].selectbox("Classification", ["", "High School", "College", "International"], index=["", "High School", "College", "International"].index(row.get('Classification','')) if row.get('Classification','') in ["", "High School", "College", "International"] else 0, key=f"classification_{i}")
 
-                    gen_cols2 = st.columns([1,1,2])
+                    gen_cols2 = st.columns([1,1,1,1])
                     grad_year = gen_cols2[0].number_input("Graduation Year", min_value=1900, max_value=2100, step=1, value=None, key=f"grad_year_{i}")
                     player_city = gen_cols2[1].text_input("City", value=row.get('City',''), key=f"player_city_{i}")
                     player_state = gen_cols2[2].text_input("State or Country", value=row.get('State or Country',''), key=f"player_state_{i}")
+                    player_num = gen_cols2[3].text_input("Player Phone #", value=row.get('Player Phone #',''), key=f"player_num_{i}")
 
                     st.markdown('<div class="editing-subheader">School/Team Information</div>', unsafe_allow_html=True)
                     team_cols = st.columns([1,1,2])
@@ -339,6 +363,19 @@ else:
 
                     fo_cols4 = st.columns(1)
                     new_front_office_note = fo_cols4[0].text_area("Add Front Office Note", value="", key=f"new_fo_note_{i}")
+
+                    st.markdown('<div class="editing-subheader">Primary Contacts</div>', unsafe_allow_html=True)
+                    pc_cols = st.columns(4)
+                    mother_name = pc_cols[0].text_input("Mother Name", value=row.get("Mother Name",''), key=f"mother_name_{i}")
+                    father_name = pc_cols[1].text_input("Father Name", value=row.get("Father Name",''), key=f"father_name_{i}")
+                    hs_coach_name = pc_cols[2].text_input("HS Coach Name", value=row.get("HS Coach Name",''), key=f"hs_coach_name_{i}")
+                    aau_coach_name = pc_cols[3].text_input("AAU Coach Name", value=row.get("AAU Coach Name",''), key=f"aau_coach_name_{i}")
+
+                    pc_cols2 = st.columns(4)
+                    mother_num = pc_cols2[0].text_input("Mother Phone #", value=row.get("Mother Phone #",''), key=f"mother_num_{i}")
+                    father_num = pc_cols2[1].text_input("Father Phone #", value=row.get("Father Phone #",''), key=f"father_num_{i}")
+                    hs_coach_num = pc_cols2[2].text_input("HS Coach Phone #", value=row.get("HS Coach Phone #",''), key=f"hs_coach_num_{i}")
+                    aau_coach_num = pc_cols2[3].text_input("AAU Coach Phone #", value=row.get("AAU Coach Phone #",''), key=f"aau_coach_num_{i}")
 
                     st.markdown('<div class="editing-subheader">Connection Details</div>', unsafe_allow_html=True)
                     con_cols = st.columns([1,3])
@@ -401,6 +438,7 @@ else:
                             grad_year,                 # Graduation Year
                             player_city,               # City
                             player_state,              # State or Country
+                            player_num,                # Player Phone #
                             current_school,            # Current School/Team
                             school_city,               # School City
                             school_state,              # School State
@@ -426,6 +464,14 @@ else:
                             teams_interest,            # Teams Interested
                             team_committed,            # Team Committed To
                             str(fon_list),             # Front Office Notes (as list)
+                            mother_name,               # Mother Name
+                            father_name,               # Father Name
+                            hs_coach_name,             # HS Coach Name
+                            aau_coach_name,            # AAU Coach Name
+                            mother_num,                # Mother Phone #
+                            father_num,                # Father Phone #
+                            hs_coach_num,              # HS Coach Phone #
+                            aau_coach_num,             # AAU Coach Phone #
                             connection_name,           # Connection
                             connection_details,        # Connection Details
                             tag,                       # Evaluation Tag

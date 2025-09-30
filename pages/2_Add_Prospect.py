@@ -24,10 +24,11 @@ with st.form("add_player_form"):
     position = gen_cols[2].selectbox("Position *", ["","Pure Point", "Wing", "Stretch Big", "Rim Runner"])
     classification = gen_cols[3].selectbox("Classification *", ["","High School", "College", "International"])
     
-    gen_cols2 = st.columns([1,1,2])
+    gen_cols2 = st.columns([1,1,1,1])
     grad_year = gen_cols2[0].number_input("Graduation Year", min_value=1900, max_value=2100, step=1, format="%d", value=None)
     player_city = gen_cols2[1].text_input("City", key="player_city")
     player_state = gen_cols2[2].text_input("State or Country", key="player_state")
+    player_num = gen_cols2[3].text_input("Player Phone #")
 
     st.header("School/Team Information")
     team_cols = st.columns([1,1,2])
@@ -89,6 +90,19 @@ with st.form("add_player_form"):
     fo_cols4 = st.columns(1)
     front_office_notes_text = fo_cols4[0].text_area("Front Office Notes")
 
+    st.header("Primary Contacts")
+    pc_cols = st.columns([1,1,1,1])
+    mother_name = pc_cols[0].text_input("Mother Name")
+    father_name = pc_cols[1].text_input("Father Name")
+    hs_coach_name = pc_cols[2].text_input("HS Coach Name")
+    aau_coach_name = pc_cols[3].text_input("AAU Coach Name")
+
+    pc_cols2 = st.columns([1,1,1,1])
+    mother_num = pc_cols2[0].text_input("Mother Phone #")
+    father_num = pc_cols2[1].text_input("Father Phone #")
+    hs_coach_num = pc_cols2[2].text_input("HS Coach Phone #")
+    aau_coach_num = pc_cols2[3].text_input("AAU Coach Phone #")
+
     st.header("Connection Details")
     con_cols = st.columns([1,3])
     connection_name = con_cols[0].selectbox("Connection", ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"])
@@ -128,6 +142,7 @@ if submit:
             grad_year,                # Graduation Year
             player_city,              # City
             player_state,             # State or Country
+            player_num,               # Player Phone #
             current_school,           # Current School/Team
             school_city,              # School City
             school_state,             # School State
@@ -153,6 +168,14 @@ if submit:
             teams_interest,           # Teams Interested
             team_committed,           # Team Committed To
             str(front_office_notes),  # Front Office Notes (as list)
+            mother_name,              # Mother's Name
+            father_name,              # Father's Name
+            hs_coach_name,            # HS Coach Name
+            aau_coach_name,           # AAU Coach Name
+            mother_num,               # Mother's Phone #
+            father_num,               # Father's Phone #
+            hs_coach_num,             # HS Coach Phone #
+            aau_coach_num,            # AAU Coach Phone #
             connection_name,          # Connection
             connection_details,       # Connection Details
             tag,                      # Evaluation Tag
