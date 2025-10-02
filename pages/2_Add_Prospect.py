@@ -73,7 +73,7 @@ with st.form("add_player_form"):
     fo_cols = st.columns(4)
     agency = fo_cols[0].text_input("Agency")
     agent = fo_cols[1].text_input("Agent")
-    agent_num = fo_cols[2].text_input("Agent Phone Number")
+    agent_num = fo_cols[2].text_input("Agent Phone #")
     eligibility_years = fo_cols[3].number_input("Years of Eligibility", min_value=0, step=1, format="%d", value=None)
 
     fo_cols2 = st.columns([1,1,1,1])
