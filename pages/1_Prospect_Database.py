@@ -78,6 +78,7 @@ with st.form("filter_form"):
     cols3 = st.columns(4)
     filter_tag = cols3[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "All-Conference"])
     filter_connection = cols3[1].selectbox("Connection", ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"])
+    filter_agent = cols3[2].text_input("Agent")
 
     filter_submit = st.form_submit_button("Apply Filters")
 
@@ -102,6 +103,8 @@ if filter_tag:
     filtered_df = filtered_df[filtered_df["Evaluation Tag"] == filter_tag]
 if filter_connection:
     filtered_df = filtered_df[filtered_df["Connection"] == filter_connection]
+if filter_agent:
+    filtered_df = filtered_df[filtered_df["Agent"].str.contains(filter_agent, case=False, na=False)]
 
 if filtered_df.empty:
     st.info("No players match the filter criteria.")
