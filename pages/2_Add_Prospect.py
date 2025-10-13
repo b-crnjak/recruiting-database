@@ -32,7 +32,7 @@ with st.form("add_player_form"):
 
     st.header("School/Team Information")
     team_cols = st.columns([1,1,2])
-    current_school = team_cols[0].text_input("Team Name *", key="current_school")
+    current_school = team_cols[0].text_input("Current School/Team *", key="current_school")
     school_city = team_cols[1].text_input("City", key="school_city")
     school_state = team_cols[2].text_input("State or Country", key="school_state")
 
