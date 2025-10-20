@@ -76,7 +76,7 @@ with st.form("filter_form"):
     filter_position = cols2[3].selectbox("Position", ["", "Pure Point", "Wing", "Stretch Big", "Rim Runner"])
 
     cols3 = st.columns(4)
-    filter_tag = cols3[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "All-Conference"])
+    filter_tag = cols3[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "High Impact"])
     filter_connection = cols3[1].selectbox("Connection", ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"])
     filter_agent = cols3[2].text_input("Agent")
 
@@ -408,7 +408,7 @@ else:
 
                     st.markdown('<div class="editing-subheader">Scouting Notes</div>', unsafe_allow_html=True)
                     scout_cols = st.columns([1,1,2])
-                    tag = scout_cols[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "All-Conference"], index=["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "All-Conference"].index(row.get('Evaluation Tag','')) if row.get('Evaluation Tag','') in ["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "All-Conference"] else 0, key=f"tag_main_{i}")
+                    tag = scout_cols[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "High Impact"], index=["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "High Impact"].index(row.get('Evaluation Tag','')) if row.get('Evaluation Tag','') in ["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "High Impact"] else 0, key=f"tag_main_{i}")
                     new_evaluator = scout_cols[1].text_input("Evaluator Name", value="", key=f"new_evaluator_{i}")
                     new_scouting_note = scout_cols[2].text_area("Add Scouting Note", value="", key=f"new_scouting_note_{i}")
 

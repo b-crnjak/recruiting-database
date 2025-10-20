@@ -110,7 +110,7 @@ with st.form("add_player_form"):
 
     st.header("Scouting Notes")
     scout_cols = st.columns([1,1,2])
-    tag = scout_cols[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "All-Conference"], index=0)
+    tag = scout_cols[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Reject", "Hold", "Bench", "Starter", "High Impact"], index=0)
     evaluator = scout_cols[1].text_input("Evaluator Name")
     scouting_notes_text = scout_cols[2].text_area("Scouting Notes")
 
