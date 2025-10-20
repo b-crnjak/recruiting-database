@@ -85,7 +85,7 @@ with st.form("add_player_form"):
     fo_cols3 = st.columns([2,1,1])
     teams_interest = fo_cols3[0].text_input("Teams Interested")
     team_committed = fo_cols3[1].text_input("Team Committed To")
-
+    test_draft = fo_cols3[2].text_input("Testing Draft Waters")
 
     fo_cols4 = st.columns(1)
     front_office_notes_text = fo_cols4[0].text_area("Front Office Notes")

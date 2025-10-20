@@ -152,6 +152,7 @@ else:
         int_nil_max = row.get('Internal NIL Max','') if 'Internal NIL Max' in row else ''
         teams_interest = row.get('Teams Interested','') if 'Teams Interested' in row else ''
         team_committed = row.get('Team Committed To','') if 'Team Committed To' in row else ''
+        test_draft = row.get('Testing Draft Waters','') if 'Testing Draft Waters' in row else ''
         mother_name = row.get("Mother Name",'')
         father_name = row.get("Father Name",'')
         hs_coach_name = row.get("HS Coach Name",'')
@@ -163,6 +164,8 @@ else:
         connection_name = row.get('Connection','')
         connection_details = row.get('Connection Details','')
         tag = row.get('Evaluation Tag','')
+        hd_approval = row.get('HD Approval','')
+
         expander_label = f"**{firstname} {lastname}** · {classification} · {position} -- *{tag}*"
 
         with st.expander(expander_label):
@@ -224,6 +227,7 @@ else:
             fo_cols3 = st.columns([2,1,1])
             fo_cols3[0].markdown(f"**Teams Interested:** {teams_interest}")
             fo_cols3[1].markdown(f"**Team Committed To:** {team_committed}")
+            fo_cols3[2].markdown(f"**Testing Draft Waters:** {test_draft}")
 
             # Front Office Notes as cards
             fon_list = []
@@ -255,11 +259,12 @@ else:
             con_cols[1].markdown(f"**Connection Details:** {connection_details}")
 
             st.markdown('<div class="carolina-subheader">Scouting Information</div>', unsafe_allow_html=True)
-            scout_cols = st.columns([1,3])
+            scout_cols = st.columns([1,1,2])
             scout_cols[0].markdown(f"**Evaluation Tag:** {tag}")
+            scout_cols[1].markdown(f"HD Approval: {hd_approval}")
             synergy_url = row.get('Synergy Link', '').strip() if 'Synergy Link' in row else ''
             if synergy_url:
-                scout_cols[1].markdown(f"[Synergy Link]({synergy_url})", unsafe_allow_html=True)
+                scout_cols[2].markdown(f"[Synergy Link]({synergy_url})", unsafe_allow_html=True)
 
             # Front Office Notes as cards
             sn_list = []
@@ -378,6 +383,7 @@ else:
                     fo_cols3 = st.columns([2,1,1])
                     teams_interest = fo_cols3[0].text_input("Teams Interested", value=row.get('Teams Interested',''), key=f"teams_interest_{i}")
                     team_committed = fo_cols3[1].text_input("Team Committed To", value=row.get('Team Committed To',''), key=f"team_committed_{i}")
+                    test_draft = fo_cols3[2].text_input("Testing Draft Waters", value=row.get('Testing Draft Waters',''), key=f"test_draft{i}")
 
                     fo_cols4 = st.columns(1)
                     new_front_office_note = fo_cols4[0].text_area("Add Front Office Note", value="", key=f"new_fo_note_{i}")
@@ -481,6 +487,7 @@ else:
                             int_nil_max,               # Internal NIL Max
                             teams_interest,            # Teams Interested
                             team_committed,            # Team Committed To
+                            test_draft,                # Testing Draft Waters
                             str(fon_list),             # Front Office Notes (as list)
                             mother_name,               # Mother Name
                             father_name,               # Father Name
