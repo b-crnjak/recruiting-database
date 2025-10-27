@@ -135,40 +135,41 @@ if submit:
                 scouting_note["evaluator"] = evaluator
             scouting_notes = [scouting_note]
         row = [
-            firstname,                # First Name
+            firstname,                # First Name (A)
             lastname,                 # Last Name
             position,                 # Position
             classification,           # Classification
             grad_year,                # Graduation Year
-            player_city,              # City
+            player_city,              # City (F)
             player_state,             # State or Country
             player_num,               # Player Phone #
             current_school,           # Current School/Team
             school_city,              # School City
             school_state,             # School State
             past_schools,             # Past School(s)/Team(s)
-            height,                   # Height
+            height,                   # Height (M)
             weight,                   # Weight
             points,                   # Points
             rebounds,                 # Rebounds
             assists,                  # Assists
             ast_to_to,                # Assist to Turnover Ratio
-            three_pt_pct,             # 3PT%
+            three_pt_pct,             # 3PT% (S)
             three_pt_rate,            # 3PT Rate
             efg_pct,                  # EFG%
             ppp,                      # Points Per Possession
             agency,                   # Agency
             agent,                    # Agent
             agent_num,                # Agent Phone Number
-            eligibility_years,        # Years of Eligibility
-            nil_min,                  # NIL Min
+            eligibility_years,        # Years of Eligibility (Z)
+            nil_min,                  # NIL Min (AA)
             nil_max,                  # NIL Max
             int_nil_min,              # Internal NIL Min
             int_nil_max,              # Internal NIL Max
             teams_interest,           # Teams Interested
             team_committed,           # Team Committed To
+            test_draft,               # Testing Draft Waters
             str(front_office_notes),  # Front Office Notes (as list)
-            mother_name,              # Mother's Name
+            mother_name,              # Mother's Name (AI)
             father_name,              # Father's Name
             hs_coach_name,            # HS Coach Name
             aau_coach_name,           # AAU Coach Name
@@ -176,7 +177,7 @@ if submit:
             father_num,               # Father's Phone #
             hs_coach_num,             # HS Coach Phone #
             aau_coach_num,            # AAU Coach Phone #
-            connection_name,          # Connection
+            connection_name,          # Connection (AQ)
             connection_details,       # Connection Details
             tag,                      # Evaluation Tag
             str(scouting_notes)       # Scouting Notes (as list)
