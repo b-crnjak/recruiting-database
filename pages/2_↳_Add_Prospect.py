@@ -90,6 +90,9 @@ with st.form("add_player_form"):
     fo_cols4 = st.columns(1)
     front_office_notes_text = fo_cols4[0].text_area("Front Office Notes")
 
+    fo_cols5 = st.columns(1)
+    red_flags_text = fo_cols5[0].text_area("Red Flags")
+
     st.header("Primary Contacts")
     pc_cols = st.columns([1,1,1,1])
     mother_name = pc_cols[0].text_input("Mother Name")
@@ -160,8 +163,8 @@ if submit:
             agency,                   # Agency
             agent,                    # Agent
             agent_num,                # Agent Phone Number
-            eligibility_years,        # Years of Eligibility (Z)
-            nil_min,                  # NIL Min (AA)
+            eligibility_years,        # Years of Eligibility
+            nil_min,                  # NIL Min
             nil_max,                  # NIL Max
             int_nil_min,              # Internal NIL Min
             int_nil_max,              # Internal NIL Max
@@ -169,7 +172,8 @@ if submit:
             team_committed,           # Team Committed To
             test_draft,               # Testing Draft Waters
             str(front_office_notes),  # Front Office Notes (as list)
-            mother_name,              # Mother's Name (AI)
+            str(red_flags_text),      # Red Flags (as list)
+            mother_name,              # Mother's Name
             father_name,              # Father's Name
             hs_coach_name,            # HS Coach Name
             aau_coach_name,           # AAU Coach Name

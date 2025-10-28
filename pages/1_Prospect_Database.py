@@ -240,6 +240,16 @@ else:
                 date_str = note.get('timestamp','')[:10]
                 st.markdown(f"<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'><span style='float:right;'>{date_str}</span><br>{note.get('text','')}</div>", unsafe_allow_html=True)
 
+            rf_list = []
+            try:
+                rf_list = ast.literal_eval(row.get('Red Flags','')) if row.get('Red Flags','') else []
+            except Exception:
+                rf_list = []
+            st.markdown("**Red Flags:**")
+            for note in sorted(rf_list, key=lambda x: x.get('timestamp',''), reverse=True):
+                date_str = note.get('timestamp','')[:10]
+                st.markdown(f"<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'><span style='float:right;'>{date_str}</span><br>{note.get('text','')}</div>", unsafe_allow_html=True)
+
             st.markdown('<div class="carolina-subheader">Primary Contacts</div>', unsafe_allow_html=True)
             pc_cols = st.columns(4)
             pc_cols[0].markdown(f"**Mother Name:** {mother_name}")
@@ -388,6 +398,9 @@ else:
                     fo_cols4 = st.columns(1)
                     new_front_office_note = fo_cols4[0].text_area("Add Front Office Note", value="", key=f"new_fo_note_{i}")
 
+                    fo_cols5 = st.columns(1)
+                    new_red_flag = fo_cols5[0].text_area("Add Red Flag", value="", key=f"new_rf_note_{i}")
+
                     st.markdown('<div class="editing-subheader">Primary Contacts</div>', unsafe_allow_html=True)
                     pc_cols = st.columns(4)
                     mother_name = pc_cols[0].text_input("Mother Name", value=row.get("Mother Name",''), key=f"mother_name_{i}")
@@ -489,6 +502,7 @@ else:
                             team_committed,            # Team Committed To
                             test_draft,                # Testing Draft Waters
                             str(fon_list),             # Front Office Notes (as list)
+                            str(rf_list),              # Red Flags (as list)
                             mother_name,               # Mother Name
                             father_name,               # Father Name
                             hs_coach_name,             # HS Coach Name
