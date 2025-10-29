@@ -69,6 +69,9 @@ with st.form("add_player_form"):
     efg_pct = meas_cols3[2].number_input("EFG%", min_value=0.0, step=0.1, format="%.1f", value=None)
     ppp = meas_cols3[3].number_input("Points Per Possession", min_value=0.0, step=0.1, format="%.1f", value=None)
 
+    meas_cols4 = st.columns(4)
+    ft_pct = meas_cols4[0].number_input("FT%", min_value=0.0, max_value=100.0, step=0.1, format="%.1f", value=None)
+
     st.header("Front Office Information")
     fo_cols = st.columns(4)
     agency = fo_cols[0].text_input("Agency")
@@ -87,11 +90,14 @@ with st.form("add_player_form"):
     team_committed = fo_cols3[1].text_input("Team Committed To")
     test_draft = fo_cols3[2].text_input("Testing Draft Waters")
 
-    fo_cols4 = st.columns(1)
-    front_office_notes_text = fo_cols4[0].text_area("Front Office Notes")
+    fo_cols4 = st.columns([1,1,1,1])
+    portal_status = fo_cols4[0].text_input("Portal Status")
 
     fo_cols5 = st.columns(1)
-    red_flags_text = fo_cols5[0].text_area("Red Flags")
+    front_office_notes_text = fo_cols5[0].text_area("Front Office Notes")
+
+    fo_cols6 = st.columns(1)
+    red_flags_text = fo_cols6[0].text_area("Red Flags")
 
     st.header("Primary Contacts")
     pc_cols = st.columns([1,1,1,1])
@@ -110,6 +116,10 @@ with st.form("add_player_form"):
     con_cols = st.columns([1,3])
     connection_name = con_cols[0].selectbox("Connection", ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"])
     connection_details = con_cols[1].text_area("Connection Details")
+
+    con_cols2 = st.columns([1,1,2])
+    prev_recruit = con_cols2[0].text_input("Previously Recruited by UNC")
+    nc_ties = con_cols2[1].text_input("Ties to North Carolina")
 
     st.header("Scouting Notes")
     scout_cols = st.columns([1,1,2])
@@ -156,10 +166,11 @@ if submit:
             rebounds,                 # Rebounds
             assists,                  # Assists
             ast_to_to,                # Assist to Turnover Ratio
-            three_pt_pct,             # 3PT% (S)
+            three_pt_pct,             # 3PT%
             three_pt_rate,            # 3PT Rate
             efg_pct,                  # EFG%
             ppp,                      # Points Per Possession
+            ft_pct,                   # FT%
             agency,                   # Agency
             agent,                    # Agent
             agent_num,                # Agent Phone Number
@@ -171,6 +182,7 @@ if submit:
             teams_interest,           # Teams Interested
             team_committed,           # Team Committed To
             test_draft,               # Testing Draft Waters
+            portal_status,            # Portal Status
             str(front_office_notes),  # Front Office Notes (as list)
             str(red_flags_text),      # Red Flags (as list)
             mother_name,              # Mother's Name
@@ -183,6 +195,8 @@ if submit:
             aau_coach_num,            # AAU Coach Phone #
             connection_name,          # Connection (AQ)
             connection_details,       # Connection Details
+            prev_recruit,             # Previously Recruited
+            nc_ties,                  # Ties to North Carolina
             tag,                      # Evaluation Tag
             str(scouting_notes)       # Scouting Notes (as list)
         ]

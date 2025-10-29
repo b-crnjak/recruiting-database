@@ -142,6 +142,7 @@ else:
         three_pt_rate = row.get('3PT Rate','')
         efg_pct = row.get('EFG%','')
         ppp = row.get('Points Per Possession','')
+        ft_pct = row.get('FT%','')
         agency = row.get('Agency','') if 'Agency' in row else ''
         agent = row.get('Agent','')
         agent_num = row.get('Agent Phone Number','') if 'Agent Phone Number' in row else ''
@@ -153,6 +154,7 @@ else:
         teams_interest = row.get('Teams Interested','') if 'Teams Interested' in row else ''
         team_committed = row.get('Team Committed To','') if 'Team Committed To' in row else ''
         test_draft = row.get('Testing Draft Waters','') if 'Testing Draft Waters' in row else ''
+        portal_status = row.get('Portal Status','') if 'Portal Status' in row else ''
         mother_name = row.get("Mother Name",'')
         father_name = row.get("Father Name",'')
         hs_coach_name = row.get("HS Coach Name",'')
@@ -163,6 +165,8 @@ else:
         aau_coach_num = row.get("AAU Coach Phone #",'')
         connection_name = row.get('Connection','')
         connection_details = row.get('Connection Details','')
+        prev_recruit = row.get('Previously Recruited','')
+        nc_ties = row.get('NC Ties','')
         tag = row.get('Evaluation Tag','')
         hd_approval = row.get('HD Approval','')
 
@@ -211,6 +215,9 @@ else:
             meas_cols3[2].markdown(f"**EFG%:** {efg_pct}")
             meas_cols3[3].markdown(f"**Points Per Possession:** {ppp}")
 
+            meas_cols4 = st.columns([1,1,1,1])
+            meas_cols4[0].markdown(f"**FT%:** {ft_pct}")
+
             st.markdown('<div class="carolina-subheader">Front Office Information</div>', unsafe_allow_html=True)
             fo_cols = st.columns(4)
             fo_cols[0].markdown(f"**Agency:** {agency}")
@@ -228,6 +235,9 @@ else:
             fo_cols3[0].markdown(f"**Teams Interested:** {teams_interest}")
             fo_cols3[1].markdown(f"**Team Committed To:** {team_committed}")
             fo_cols3[2].markdown(f"**Testing Draft Waters:** {test_draft}")
+
+            fo_cols4 = st.columns([1,1,1,1])
+            fo_cols4[0].markdown(f"**Portal Status:** {portal_status}")
 
             # Front Office Notes as cards
             fon_list = []
@@ -267,6 +277,10 @@ else:
             con_cols = st.columns([1,3])
             con_cols[0].markdown(f"**Connection:** {connection_name}")
             con_cols[1].markdown(f"**Connection Details:** {connection_details}")
+
+            con_cols2 = st.columns([1,1,2])
+            con_cols2[0].markdown(f"**Previously Recruited:** {prev_recruit}")
+            con_cols2[1].markdown(f"**Ties to North Carolina:** {nc_ties}")
 
             st.markdown('<div class="carolina-subheader">Scouting Information</div>', unsafe_allow_html=True)
             scout_cols = st.columns([1,1,2])
@@ -372,6 +386,10 @@ else:
                     ppp_val = row.get('Points Per Possession', None)
                     ppp = meas_cols3[3].number_input("Points Per Possession", min_value=0.0, step=0.1, value=safe_float(ppp_val) if ppp_val not in [None, '', 0] else None, key=f"ppp_{i}")
 
+                    meas_cols4 = st.columns([1,1,1,1])
+                    ft_pct_val = row.get('FT%', None)
+                    ft_pct = meas_cols4[0].number_input("FT%", min_value=0.0, max_value=100.0, step=0.1, value=safe_float(ft_pct_val) if ft_pct_val not in [None, '', 0] else None, key=f"ft_pct_{i}")
+
                     st.markdown('<div class="editing-subheader">Front Office Information</div>', unsafe_allow_html=True)
                     fo_cols = st.columns(4)
                     agency = fo_cols[0].text_input("Agency", value=row.get('Agency',''), key=f"agency_{i}")
@@ -394,6 +412,9 @@ else:
                     teams_interest = fo_cols3[0].text_input("Teams Interested", value=row.get('Teams Interested',''), key=f"teams_interest_{i}")
                     team_committed = fo_cols3[1].text_input("Team Committed To", value=row.get('Team Committed To',''), key=f"team_committed_{i}")
                     test_draft = fo_cols3[2].text_input("Testing Draft Waters", value=row.get('Testing Draft Waters',''), key=f"test_draft{i}")
+
+                    fo_cols_ps = st.columns([1,1,1,1])
+                    portal_status = fo_cols_ps[0].text_input("Portal Status", value=row.get('Portal Status',''), key=f"portal_status_{i}")
 
                     fo_cols4 = st.columns(1)
                     new_front_office_note = fo_cols4[0].text_area("Add Front Office Note", value="", key=f"new_fo_note_{i}")
@@ -418,6 +439,10 @@ else:
                     con_cols = st.columns([1,3])
                     connection_name = con_cols[0].selectbox("Connection", ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"], index=["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"].index(row.get('Connection','')) if row.get('Connection','') in ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"] else 0, key=f"connection_name_main_{i}")
                     connection_details = con_cols[1].text_area("Connection Details", value=row.get('Connection Details',''), key=f"connection_details_main_{i}")
+
+                    con_cols2 = st.columns([1,1,2])
+                    prev_recruit = con_cols2[0].text_area("Previously Recruited", value=row.get('Previously Recruited',''), key=f"prev_recruit_main_{i}")
+                    nc_ties = con_cols2[1].text_area("Ties to North Carolina", value=row.get('NC Ties',''), key=f"nc_ties_main_{i}")
 
                     st.markdown('<div class="editing-subheader">Scouting Notes</div>', unsafe_allow_html=True)
                     scout_cols = st.columns([1,1,2])
@@ -490,6 +515,7 @@ else:
                             three_pt_rate,             # 3PT Rate
                             efg_pct,                   # EFG%
                             ppp,                       # Points Per Possession
+                            ft_pct,                    # FT%
                             agency,                    # Agency
                             agent,                     # Agent
                             agent_num,                 # Agent Phone Number
@@ -501,6 +527,7 @@ else:
                             teams_interest,            # Teams Interested
                             team_committed,            # Team Committed To
                             test_draft,                # Testing Draft Waters
+                            portal_status,             # Portal Status
                             str(fon_list),             # Front Office Notes (as list)
                             str(rf_list),              # Red Flags (as list)
                             mother_name,               # Mother Name
@@ -513,6 +540,8 @@ else:
                             aau_coach_num,             # AAU Coach Phone #
                             connection_name,           # Connection
                             connection_details,        # Connection Details
+                            prev_recruit,              # Previously Recruited
+                            nc_ties,                   # Ties to North Carolina
                             tag,                       # Evaluation Tag
                             str(sn_list)               # Scouting Notes (as list)
                         ]
