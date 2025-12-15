@@ -76,7 +76,7 @@ with st.form("filter_form"):
     filter_position = cols2[3].selectbox("Position", ["", "Pure Point", "Wing", "Stretch Big", "Rim Runner"])
 
     cols3 = st.columns(4)
-    filter_tag = cols3[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Reject", "Hold", "Bench", "Rotation", "Starter", "High Impact"])
+    filter_tag = cols3[0].selectbox("Evaluation Tag", ["", "Need to Evaluate", "Reject", "Hold", "Bench", "Rotation", "Starter", "High Impact"], index = 1)
     filter_connection = cols3[1].selectbox("Connection", ["", "Jim Tanner", "TJ Beisner", "Buzz Peterson"])
     filter_agent = cols3[2].text_input("Agent")
 
