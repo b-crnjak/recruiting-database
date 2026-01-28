@@ -3,6 +3,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 import pandas as pd
 import json
+import atexit
 
 scope = ["https://spreadsheets.google.com/feeds",
          "https://www.googleapis.com/auth/drive"]
@@ -12,7 +13,10 @@ def get_gspread_client():
     creds_dict = json.loads(st.secrets["gcp_service_account"]["service_account_json"])
     creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
     creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
-    return gspread.authorize(creds)
+    client = gspread.authorize(creds)
+    # Close connection on exit
+    atexit.register(lambda: client.auth.close() if hasattr(client, 'auth') else None)
+    return client
 
 @st.cache_resource
 def get_spreadsheet():

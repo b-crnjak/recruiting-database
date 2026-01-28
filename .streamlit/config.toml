@@ -10,6 +10,11 @@ maxUploadSize = 200
 enableXsrfProtection = true
 enableCORS = true
 headless = true
+port = 8501
+runOnSave = true
+
+[browser]
+gatherUsageStats = false
 
 [theme]
 primaryColor = "#4B9CD3"
@@ -17,4 +22,5 @@ backgroundColor = "#f5f5f5"
 secondaryBackgroundColor = "#e9ecef"
 textColor = "#212529"
 font = "sans serif"
+
 

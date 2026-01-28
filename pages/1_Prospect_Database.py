@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import ast
-from db_utils import sheet
+from db_utils import sheet, get_worksheet_data
 
 st.header("UNC MBB Prospect Database")
 
@@ -59,7 +59,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-players = sheet.get_all_records()
+players = get_worksheet_data('players')
 df = pd.DataFrame(players)
 
 with st.form("filter_form"):
