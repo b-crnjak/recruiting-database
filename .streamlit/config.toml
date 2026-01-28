@@ -1,0 +1,15 @@
+[logger]
+level = "error"
+
+[client]
+showErrorDetails = false
+
+[server]
+maxUploadSize = 200
+
+[theme]
+primaryColor = "#4B9CD3"
+backgroundColor = "#f5f5f5"
+secondaryBackgroundColor = "#e9ecef"
+textColor = "#212529"
+font = "sans serif"

@@ -24,7 +24,8 @@ st.header("Agent Directory")
 
 # Load Agent Data from Google Sheet
 try:
-    agent_sheet = sheet.spreadsheet.worksheet('agents')
+    from db_utils import get_worksheet
+    agent_sheet = get_worksheet('agents')
 except Exception:
     st.error("Could not find 'agents' worksheet in the Google Sheet.")
     st.stop()

@@ -14,8 +14,19 @@ def get_gspread_client():
     creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
     return gspread.authorize(creds)
 
-client = get_gspread_client()
+@st.cache_resource
+def get_spreadsheet():
+    client = get_gspread_client()
+    return client.open("rec_database")
 
-sheet = client.open("rec_database").worksheet("players")
+@st.cache_resource
+def get_worksheet(worksheet_name):
+    spreadsheet = get_spreadsheet()
+    return spreadsheet.worksheet(worksheet_name)
+
+# Get the main players worksheet
+client = get_gspread_client()
+spreadsheet = get_spreadsheet()
+sheet = get_worksheet("players")
 data = sheet.get_all_records()
 df = pd.DataFrame(data)

@@ -1,5 +1,5 @@
 import streamlit as st
-from db_utils import sheet
+from db_utils import sheet, get_worksheet
 
 st.markdown(
     """
