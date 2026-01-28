@@ -30,7 +30,8 @@ except Exception:
     st.error("Could not find 'agents' worksheet in the Google Sheet.")
     st.stop()
 
-agent_records = agent_sheet.get_all_records()
+from db_utils import get_worksheet_data
+agent_records = get_worksheet_data('agents')
 df = pd.DataFrame(agent_records)
 
 # --- FILTERS ---

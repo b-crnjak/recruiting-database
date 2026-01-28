@@ -3,9 +3,13 @@ level = "error"
 
 [client]
 showErrorDetails = false
+maxMessageSize = 10
 
 [server]
 maxUploadSize = 200
+enableXsrfProtection = true
+enableCORS = true
+headless = true
 
 [theme]
 primaryColor = "#4B9CD3"
@@ -13,3 +17,4 @@ backgroundColor = "#f5f5f5"
 secondaryBackgroundColor = "#e9ecef"
 textColor = "#212529"
 font = "sans serif"
+
