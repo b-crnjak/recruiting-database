@@ -7,12 +7,14 @@ import json
 scope = ["https://spreadsheets.google.com/feeds",
          "https://www.googleapis.com/auth/drive"]
 
-creds_dict = dict(st.secrets["gcp_service_account"])
-creds_dict = json.loads(st.secrets["gcp_service_account"]["service_account_json"])
-creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
+@st.cache_resource
+def get_gspread_client():
+    creds_dict = json.loads(st.secrets["gcp_service_account"]["service_account_json"])
+    creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
+    creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
+    return gspread.authorize(creds)
 
-creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
-client = gspread.authorize(creds)
+client = get_gspread_client()
 
 sheet = client.open("rec_database").worksheet("players")
 data = sheet.get_all_records()
