@@ -561,8 +561,12 @@ else:
                         cell_range = f"{start_cell}:{end_cell}"
                         # Use update instead of update_cells for reliability
                         sheet.update(cell_range, [update_row])
-                        st.success("Player updated. Please refresh.")
+                        # Clear cached worksheet data and rerun to reflect updates immediately
+                        from db_utils import get_worksheet_data
+                        get_worksheet_data.clear()
+                        st.success("Player updated.")
                         st.session_state[f"editing_{i}"] = False
+                        st.experimental_rerun()
                 if cancel_btn:
                     st.session_state[f"editing_{i}"] = False
             if f"delete_confirm_{i}" not in st.session_state:
@@ -579,7 +583,11 @@ else:
                     if len(idx) > 0:
                         row_to_delete = int(idx[0]+2)
                         sheet.delete_rows(row_to_delete)
-                        st.success("Player deleted. Please refresh.")
+                        # Clear cached worksheet data and rerun to reflect deletion immediately
+                        from db_utils import get_worksheet_data
+                        get_worksheet_data.clear()
+                        st.success("Player deleted.")
+                        st.experimental_rerun()
                     st.session_state[f"delete_confirm_{i}"] = False
                 if cancel_delete:
                     st.session_state[f"delete_confirm_{i}"] = False
