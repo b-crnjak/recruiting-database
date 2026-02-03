@@ -62,6 +62,26 @@ st.markdown(
 players = get_worksheet_data('players')
 df = pd.DataFrame(players)
 
+def safe_rerun():
+    """Call Streamlit's rerun if available; otherwise update a session flag as a no-op fallback.
+
+    This prevents AttributeError when `st.experimental_rerun` is not present in the
+    Streamlit runtime used by the environment.
+    """
+    try:
+        # Prefer the documented API when available
+        if hasattr(st, "experimental_rerun"):
+            st.experimental_rerun()
+            return
+        # Fallback: toggle a session_state counter to avoid raising AttributeError
+        st.session_state["_rerun_fallback_count"] = st.session_state.get("_rerun_fallback_count", 0) + 1
+    except Exception:
+        # Swallow any error to avoid crashing the app; user can manually refresh
+        try:
+            st.session_state["_rerun_fallback_count"] = st.session_state.get("_rerun_fallback_count", 0) + 1
+        except Exception:
+            pass
+
 with st.form("filter_form"):
     cols = st.columns(4)
     filter_firstname = cols[0].text_input("First Name")
@@ -566,7 +586,7 @@ else:
                         get_worksheet_data.clear()
                         st.success("Player updated.")
                         st.session_state[f"editing_{i}"] = False
-                        st.experimental_rerun()
+                        safe_rerun()
                 if cancel_btn:
                     st.session_state[f"editing_{i}"] = False
             if f"delete_confirm_{i}" not in st.session_state:
@@ -587,7 +607,7 @@ else:
                         from db_utils import get_worksheet_data
                         get_worksheet_data.clear()
                         st.success("Player deleted.")
-                        st.experimental_rerun()
+                        safe_rerun()
                     st.session_state[f"delete_confirm_{i}"] = False
                 if cancel_delete:
                     st.session_state[f"delete_confirm_{i}"] = False
