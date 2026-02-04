@@ -11,7 +11,8 @@ if "success_message" not in st.session_state:
 if st.session_state.show_success:
     st.success(st.session_state.success_message)
     st.session_state.show_success = False
-    st.rerun()
+    # Don't force another rerun here — allowing this render to complete
+    # ensures the success message is visible to the user.
 
 st.markdown(
     """
