@@ -206,7 +206,7 @@ if submit:
             from db_utils import get_worksheet_data
             get_worksheet_data.clear()
             st.success(f"Added player: {firstname} {lastname}")
-            st.experimental_rerun()
+            st.rerun()
         except Exception as e:
             st.error(f"Failed to add player: {e}")
     elif height_error:
