@@ -1,6 +1,18 @@
 import streamlit as st
 from db_utils import sheet, get_worksheet
 
+# Initialize session state for success message
+if "show_success" not in st.session_state:
+    st.session_state.show_success = False
+if "success_message" not in st.session_state:
+    st.session_state.success_message = ""
+
+# Display success message if it was just set
+if st.session_state.show_success:
+    st.success(st.session_state.success_message)
+    st.session_state.show_success = False
+    st.rerun()
+
 st.markdown(
     """
     <style>
@@ -205,7 +217,9 @@ if submit:
             # Clear cached worksheet data so subsequent runs fetch fresh data
             from db_utils import get_worksheet_data
             get_worksheet_data.clear()
-            st.success(f"Added player: {firstname} {lastname}")
+            # Set success message in session state and trigger rerun
+            st.session_state.show_success = True
+            st.session_state.success_message = f"Added player: {firstname} {lastname}"
             st.rerun()
         except Exception as e:
             st.error(f"Failed to add player: {e}")
