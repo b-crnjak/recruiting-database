@@ -259,17 +259,6 @@ else:
             fo_cols4 = st.columns([1,1,1,1])
             fo_cols4[0].markdown(f"**Portal Status:** {portal_status}")
 
-            # Front Office Notes as cards
-            fon_list = []
-            try:
-                fon_list = ast.literal_eval(row.get('Front Office Notes','')) if row.get('Front Office Notes','') else []
-            except Exception:
-                fon_list = []
-            st.markdown("**Front Office Notes:**")
-            for note in sorted(fon_list, key=lambda x: x.get('timestamp',''), reverse=True):
-                date_str = note.get('timestamp','')[:10]
-                st.markdown(f"<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'><span style='float:right;'>{date_str}</span><br>{note.get('text','')}</div>", unsafe_allow_html=True)
-
             rf_list = []
             try:
                 rf_list = ast.literal_eval(row.get('Red Flags','')) if row.get('Red Flags','') else []
@@ -310,7 +299,7 @@ else:
             if synergy_url:
                 scout_cols[2].markdown(f"[Synergy Link]({synergy_url})", unsafe_allow_html=True)
 
-            # Front Office Notes as cards
+            # Scouting Notes as Cards
             sn_list = []
             try:
                 sn_list = ast.literal_eval(row.get('Scouting Notes','')) if row.get('Scouting Notes','') else []
