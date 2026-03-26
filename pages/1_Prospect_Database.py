@@ -269,6 +269,7 @@ else:
                 date_str = note.get('timestamp','')[:10]
                 st.markdown(f"<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'><span style='float:right;'>{date_str}</span><br>{note.get('text','')}</div>", unsafe_allow_html=True)
 
+            # Front Office Notes as Cards
             fo_list = []
             try:
                 fo_list = ast.literal_eval(row.get('Front Office Notes','')) if row.get('Front Office Notes','') else []
