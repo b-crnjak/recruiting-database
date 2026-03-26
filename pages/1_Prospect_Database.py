@@ -269,6 +269,16 @@ else:
                 date_str = note.get('timestamp','')[:10]
                 st.markdown(f"<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'><span style='float:right;'>{date_str}</span><br>{note.get('text','')}</div>", unsafe_allow_html=True)
 
+            fo_list = []
+            try:
+                fo_list = ast.literal_eval(row.get('Front Office Notes','')) if row.get('Front Office Notes','') else []
+            except Exception:
+                fo_list = []
+            st.markdown("**Front Office Notes:**")
+            for note in sorted(fo_list, key=lambda x: x.get('timestamp',''), reverse=True):
+                date_str = note.get('timestamp','')[:10]
+                st.markdown(f"<div style='border:1px solid #ddd; border-radius:8px; padding:8px; margin-bottom:8px; background:#f9f9f9;'><span style='float:right;'>{date_str}</span><br>{note.get('text','')}</div>", unsafe_allow_html=True)
+            
             st.markdown('<div class="carolina-subheader">Primary Contacts</div>', unsafe_allow_html=True)
             pc_cols = st.columns(4)
             pc_cols[0].markdown(f"**Mother Name:** {mother_name}")
